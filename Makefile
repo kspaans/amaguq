@@ -1,5 +1,5 @@
 CXX=clang++
-CXXFLAGS=-O -MMD
+CXXFLAGS=-O -MMD -std=c++11
 
 
 GTEST_DIR = /usr/src/gtest
@@ -14,6 +14,8 @@ TESTS = Tests
 EXEC=Amaguq
 OBJS=main.o amaguq.o
 DEPS=${OBJS:.o=.d}
+
+all: ${EXEC} ${TESTS}
 
 ${EXEC}: ${OBJS}
 	${CXX} ${OBJS} -o ${EXEC}
@@ -44,7 +46,7 @@ gtest_main.a : gtest-all.o gtest_main.o
 tests.o : $(USER_DIR)/tests.cpp $(GTEST_HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/tests.cpp
 
-tests : tests.o amaguq.o gtest_main.a
+Tests : tests.o amaguq.o gtest_main.a
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
 ################################################################################
 
