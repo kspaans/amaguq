@@ -14,6 +14,7 @@ void print(atom *a)
 {
 	fixnum*  fn;
 	boolean* b;
+	charlit *c;
 
 	fn = dynamic_cast<fixnum*>(a);
 	if (nullptr != fn) {
@@ -23,6 +24,11 @@ void print(atom *a)
 	b = dynamic_cast<boolean*>(a);
 	if (nullptr != b) {
 		std::cout << b;
+		goto done;
+	}
+	c = dynamic_cast<charlit*>(a);
+	if (nullptr != c) {
+		std::cout << c;
 		goto done;
 	}
 

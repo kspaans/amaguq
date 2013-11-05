@@ -29,6 +29,15 @@ struct boolean : atom {
 	std::string str;
 };
 
+struct charlit : atom {
+	charlit(const std::string&);
+	~charlit();
+
+	friend std::ostream& operator<<(std::ostream& stream, const charlit* a);
+
+	std::string str;
+};
+
 struct heap {
 	heap();
 	~heap();

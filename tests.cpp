@@ -15,6 +15,12 @@ struct bools_test : testing::Test {
 	boolean* b;
 };
 
+struct chars_test : testing::Test {
+	amaguq a;
+	atom* t;
+	charlit* c;
+};
+
 TEST_F(ints_test, integers0)
 {
 	std::string s = "123";
@@ -77,4 +83,34 @@ TEST_F(bools_test, booleans_singletons)
 	t4 = a.eval(f);
 	EXPECT_EQ(t, t2);
 	EXPECT_EQ(t3, t4);
+}
+
+TEST_F(chars_test, chars0)
+{
+	std::string s = "#\\a";
+
+	t = a.eval(s);
+	c = dynamic_cast<charlit*>(t);
+	EXPECT_NE(nullptr, c);
+	EXPECT_EQ(s, c->str);
+}
+
+TEST_F(chars_test, chars1)
+{
+	std::string s = "#\\ ";
+
+	t = a.eval(s);
+	c = dynamic_cast<charlit*>(t);
+	EXPECT_NE(nullptr, c);
+	EXPECT_EQ("#\\space", c->str);
+}
+
+TEST_F(chars_test, chars2)
+{
+	std::string s = "#\\\n";
+
+	t = a.eval(s);
+	c = dynamic_cast<charlit*>(t);
+	EXPECT_NE(nullptr, c);
+	EXPECT_EQ("#\\newline", c->str);
 }

@@ -79,6 +79,22 @@ std::ostream& operator<<(std::ostream& stream, const boolean* a)
 	return stream;
 }
 
+charlit::charlit(const std::string& s)
+{
+	str = s;
+}
+
+charlit::~charlit()
+{
+}
+
+std::ostream& operator<<(std::ostream& stream, const charlit* a)
+{
+	stream << a->str;
+
+	return stream;
+}
+
 amaguq::amaguq()
 {
 	std::cout << "Amaguq constructor!" << std::endl;
@@ -96,6 +112,21 @@ amaguq::~amaguq()
 	std::cout << "Amaguq destructor!" << std::endl;
 }
 
+atom* char_helper(const std::string& s)
+{
+	charlit *c;
+
+	if (2 == s.find(' ')) {
+		c = new charlit("#\\space");
+	} else if (2 == s.find('\n')) {
+		c = new charlit("#\\newline");
+	} else {
+		c = new charlit(s);
+	}
+
+	return c;
+}
+
 atom* amaguq::eval(const std::string& s)
 {
 	atom *a = nullptr;
@@ -105,6 +136,8 @@ atom* amaguq::eval(const std::string& s)
 			return hp.h[0];
 		} else if (1 == s.find('f')) {
 			return hp.h[1];
+		} else if (1 == s.find('\\')) {
+			a = char_helper(s);
 		}
 	} else {
 		a = new fixnum(s);
