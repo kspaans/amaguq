@@ -1,22 +1,42 @@
 #ifndef __AMAGUQ_H__
 #define __AMAGUQ_H__
 
+#include <ostream>
 #include <string>
+#include <vector>
+
+struct atom {
+	virtual ~atom();
+
+	friend std::ostream& operator<<(std::ostream& stream, const atom* a);
+};
+
+struct fixnum : atom {
+	fixnum(const std::string&);
+	~fixnum();
+
+	friend std::ostream& operator<<(std::ostream& stream, const fixnum* a);
+
+	int value;
+};
+
+struct boolean : atom {
+	boolean(const std::string&);
+	~boolean();
+
+	friend std::ostream& operator<<(std::ostream& stream, const boolean* a);
+
+	std::string str;
+};
 
 struct heap {
 	heap();
 	~heap();
-};
 
-struct atom {
-	// Add a polymorphic constructor?
-	virtual void eval(void);
-};
+	void alloc(atom*);
 
-struct fixnum : atom {
-	fixnum(std::string);
-
-	int value;
+	std::vector<atom*> h;
+	int allocs;
 };
 
 /*
@@ -27,7 +47,7 @@ struct amaguq {
 	amaguq();
 	~amaguq();
 
-	atom * eval(std::string line);
+	atom* eval(const std::string&);
 
 	heap hp;
 };

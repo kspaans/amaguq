@@ -12,14 +12,24 @@ std::string read(void)
 
 void print(atom *a)
 {
-	fixnum *i;
+	fixnum*  fn;
+	boolean* b;
 
-	i = dynamic_cast<fixnum *>(a);
+	fn = dynamic_cast<fixnum*>(a);
+	if (nullptr != fn) {
+		std::cout << fn;
+		goto done;
+	}
+	b = dynamic_cast<boolean*>(a);
+	if (nullptr != b) {
+		std::cout << b;
+		goto done;
+	}
 
-	std::cout << i->value;
+	std::cout << a;
+
+done:
 	std::cout << std::endl;
-
-	return;
 }
 
 int main(void)

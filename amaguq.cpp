@@ -5,16 +5,26 @@
 heap::heap()
 {
 	std::cout << "Heap contructor!" << std::endl;
+
+	allocs = 0;
 }
 
 heap::~heap()
 {
 	std::cout << "Heap destructor!" << std::endl;
+	std::cout << "Allocs: " << allocs << std::endl;
+
+	std::vector<atom*>::iterator it;
+
+	for (it = h.begin(); it != h.end(); ++it) {
+		delete *it;
+	}
 }
 
-void atom::eval()
+void heap::alloc(atom* a)
 {
-	return;
+	h.push_back(a);
+	allocs += 1;
 }
 
 #if 0
@@ -22,21 +32,63 @@ atom::atom()
 {
 	std::cout << "Atom constructor!" << std::endl;
 }
+#endif
 
 atom::~atom()
 {
 	std::cout << "Atom destructor!" << std::endl;
 }
-#endif
 
-fixnum::fixnum(std::string s)
+std::ostream& operator<<(std::ostream& stream, const atom* a)
+{
+	(void)a;
+	stream << "()";
+
+	return stream;
+}
+
+fixnum::fixnum(const std::string& s)
 {
 	value = std::stoi(s);
+}
+
+fixnum::~fixnum()
+{
+}
+
+std::ostream& operator<<(std::ostream& stream, const fixnum* a)
+{
+	stream << a->value;
+
+	return stream;
+}
+
+boolean::boolean(const std::string& s)
+{
+	str = s;
+}
+
+boolean::~boolean()
+{
+}
+
+std::ostream& operator<<(std::ostream& stream, const boolean* a)
+{
+	stream << a->str;
+
+	return stream;
 }
 
 amaguq::amaguq()
 {
 	std::cout << "Amaguq constructor!" << std::endl;
+
+	atom *a;
+
+	a = new boolean("#t");
+	hp.alloc(a);
+	a = new boolean("#f");
+	hp.alloc(a);
 }
 
 amaguq::~amaguq()
@@ -44,9 +96,21 @@ amaguq::~amaguq()
 	std::cout << "Amaguq destructor!" << std::endl;
 }
 
-atom * amaguq::eval(std::string s)
+atom* amaguq::eval(const std::string& s)
 {
-	fixnum *a = new fixnum(s);
+	atom *a = nullptr;
+
+	if (0 == s.find('#')) {
+		if (1 == s.find('t')) {
+			return hp.h[0];
+		} else if (1 == s.find('f')) {
+			return hp.h[1];
+		}
+	} else {
+		a = new fixnum(s);
+	}
+
+	hp.alloc(a);
 
 	return a;
 }

@@ -5,8 +5,14 @@
 
 struct ints_test : testing::Test {
 	amaguq a;
-	atom *t;
-	fixnum *i;
+	atom* t;
+	fixnum* i;
+};
+
+struct bools_test : testing::Test {
+	amaguq a;
+	atom* t;
+	boolean* b;
 };
 
 TEST_F(ints_test, integers0)
@@ -14,7 +20,7 @@ TEST_F(ints_test, integers0)
 	std::string s = "123";
 
 	t = a.eval(s);
-	i = dynamic_cast<fixnum *>(t);
+	i = dynamic_cast<fixnum*>(t);
 	EXPECT_NE(nullptr, i);
 	EXPECT_EQ(123, i->value);
 }
@@ -24,7 +30,7 @@ TEST_F(ints_test, integers1)
 	std::string s = "-123";
 
 	t = a.eval(s);
-	i = dynamic_cast<fixnum *>(t);
+	i = dynamic_cast<fixnum*>(t);
 	EXPECT_NE(nullptr, i);
 	EXPECT_EQ(-123, i->value);
 }
@@ -34,7 +40,41 @@ TEST_F(ints_test, integers2)
 	std::string s = "007";
 
 	t = a.eval(s);
-	i = dynamic_cast<fixnum *>(t);
+	i = dynamic_cast<fixnum*>(t);
 	EXPECT_NE(nullptr, i);
 	EXPECT_EQ(7, i->value);
+}
+
+TEST_F(bools_test, booleans0)
+{
+	std::string s = "#t";
+
+	t = a.eval(s);
+	b = dynamic_cast<boolean*>(t);
+	EXPECT_NE(nullptr, b);
+}
+
+TEST_F(bools_test, booleans1)
+{
+	std::string s = "#f";
+
+	t = a.eval(s);
+	b = dynamic_cast<boolean*>(t);
+	EXPECT_NE(nullptr, b);
+}
+
+TEST_F(bools_test, booleans_singletons)
+{
+	std::string tr = "#t";
+	std::string f  = "#f";
+	atom* t2;
+	atom* t3;
+	atom* t4;
+
+	t = a.eval(tr);
+	t2 = a.eval(tr);
+	t3 = a.eval(f);
+	t4 = a.eval(f);
+	EXPECT_EQ(t, t2);
+	EXPECT_EQ(t3, t4);
 }
