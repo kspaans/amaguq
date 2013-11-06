@@ -21,6 +21,12 @@ struct chars_test : testing::Test {
 	charlit* c;
 };
 
+struct strings_test : testing::Test {
+	amaguq a;
+	atom* t;
+	strlit* s;
+};
+
 TEST_F(ints_test, integers0)
 {
 	std::string s = "123";
@@ -113,4 +119,34 @@ TEST_F(chars_test, chars2)
 	c = dynamic_cast<charlit*>(t);
 	EXPECT_NE(nullptr, c);
 	EXPECT_EQ("#\\newline", c->str);
+}
+
+TEST_F(strings_test, str0)
+{
+	std::string str = "\"asdf\"";
+
+	t = a.eval(str);
+	s = dynamic_cast<strlit*>(t);
+	EXPECT_NE(nullptr, s);
+	EXPECT_EQ(str, s->str);
+}
+
+TEST_F(strings_test, str1)
+{
+	std::string str = "\"asdf\\\"asdf\"";
+
+	t = a.eval(str);
+	s = dynamic_cast<strlit*>(t);
+	EXPECT_NE(nullptr, s);
+	EXPECT_EQ(str, s->str);
+}
+
+TEST_F(strings_test, str2)
+{
+	std::string str = "\"asdf\\n\"";
+
+	t = a.eval(str);
+	s = dynamic_cast<strlit*>(t);
+	EXPECT_NE(nullptr, s);
+	EXPECT_EQ(str, s->str);
 }

@@ -4,16 +4,11 @@
 
 heap::heap()
 {
-	std::cout << "Heap contructor!" << std::endl;
-
 	allocs = 0;
 }
 
 heap::~heap()
 {
-	std::cout << "Heap destructor!" << std::endl;
-	std::cout << "Allocs: " << allocs << std::endl;
-
 	std::vector<atom*>::iterator it;
 
 	for (it = h.begin(); it != h.end(); ++it) {
@@ -36,7 +31,6 @@ atom::atom()
 
 atom::~atom()
 {
-	std::cout << "Atom destructor!" << std::endl;
 }
 
 std::ostream& operator<<(std::ostream& stream, const atom* a)
@@ -95,10 +89,24 @@ std::ostream& operator<<(std::ostream& stream, const charlit* a)
 	return stream;
 }
 
+strlit::strlit(const std::string& s)
+{
+	str = s;
+}
+
+strlit::~strlit()
+{
+}
+
+std::ostream& operator<<(std::ostream& stream, const strlit* a)
+{
+	stream << a->str;
+
+	return stream;
+}
+
 amaguq::amaguq()
 {
-	std::cout << "Amaguq constructor!" << std::endl;
-
 	atom *a;
 
 	a = new boolean("#t");
@@ -109,7 +117,6 @@ amaguq::amaguq()
 
 amaguq::~amaguq()
 {
-	std::cout << "Amaguq destructor!" << std::endl;
 }
 
 atom* char_helper(const std::string& s)
@@ -127,6 +134,44 @@ atom* char_helper(const std::string& s)
 	return c;
 }
 
+atom* str_helper(const std::string& s)
+{
+	std::string::const_iterator it;
+	strlit* str;
+	unsigned sstate = 0x0;
+
+	for (it = s.begin(); it != s.end(); ++it) {
+		if (0x0 == sstate) {
+			if ('"' == *it) {
+				sstate = 0x1;
+			}
+		} else if (0x1 == sstate) {
+			if ('"' == *it) {
+				sstate = 0x2;
+			} else if ('\\' == *it) {
+				sstate = 0x3;
+			}
+		} else if (0x2 == sstate) {
+			sstate = 0x8;
+		} else if (0x3 == sstate) {
+			if ('"' == *it) {
+				sstate = 0x1;
+			} else if ('n' == *it) {
+				sstate = 0x1;
+			}
+		}
+	}
+
+	if (0x8 == sstate) {
+		std::cerr << "Improper string" << std::endl;
+		return nullptr;
+	}
+
+	str = new strlit(s);
+
+	return str;
+}
+
 atom* amaguq::eval(const std::string& s)
 {
 	atom *a = nullptr;
@@ -139,6 +184,8 @@ atom* amaguq::eval(const std::string& s)
 		} else if (1 == s.find('\\')) {
 			a = char_helper(s);
 		}
+	} else if (0 == s.find('"')) {
+		a = str_helper(s);
 	} else {
 		a = new fixnum(s);
 	}

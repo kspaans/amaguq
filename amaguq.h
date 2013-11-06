@@ -38,6 +38,15 @@ struct charlit : atom {
 	std::string str;
 };
 
+struct strlit : atom {
+	strlit(const std::string&);
+	~strlit();
+
+	friend std::ostream& operator<<(std::ostream& stream, const strlit* a);
+
+	std::string str;
+};
+
 struct heap {
 	heap();
 	~heap();
