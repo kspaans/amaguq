@@ -22,13 +22,6 @@ void heap::alloc(atom* a)
 	allocs += 1;
 }
 
-#if 0
-atom::atom()
-{
-	std::cout << "Atom constructor!" << std::endl;
-}
-#endif
-
 atom::~atom()
 {
 }
@@ -105,6 +98,22 @@ std::ostream& operator<<(std::ostream& stream, const strlit* a)
 	return stream;
 }
 
+list::list(atom* t)
+{
+	a = t;
+}
+
+list::~list()
+{
+}
+
+std::ostream& operator<<(std::ostream& stream, const list* a)
+{
+	stream << "()";
+
+	return stream;
+}
+
 amaguq::amaguq()
 {
 	atom *a;
@@ -112,6 +121,8 @@ amaguq::amaguq()
 	a = new boolean("#t");
 	hp.alloc(a);
 	a = new boolean("#f");
+	hp.alloc(a);
+	a = new list(nullptr); // "empty list"
 	hp.alloc(a);
 }
 
@@ -172,6 +183,11 @@ atom* str_helper(const std::string& s)
 	return str;
 }
 
+atom* list_helper(const std::string& s)
+{
+	return nullptr;
+}
+
 atom* amaguq::eval(const std::string& s)
 {
 	atom *a = nullptr;
@@ -186,6 +202,12 @@ atom* amaguq::eval(const std::string& s)
 		}
 	} else if (0 == s.find('"')) {
 		a = str_helper(s);
+	} else if (0 == s.find('(')) {
+		if (1 == s.find(')')) {
+			return hp.h[2];
+		} else {
+			a = list_helper(s);
+		}
 	} else {
 		a = new fixnum(s);
 	}

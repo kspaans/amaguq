@@ -27,6 +27,12 @@ struct strings_test : testing::Test {
 	strlit* s;
 };
 
+struct lists_test : testing::Test {
+	amaguq a;
+	atom* t;
+	list* l;
+};
+
 TEST_F(ints_test, integers0)
 {
 	std::string s = "123";
@@ -149,4 +155,14 @@ TEST_F(strings_test, str2)
 	s = dynamic_cast<strlit*>(t);
 	EXPECT_NE(nullptr, s);
 	EXPECT_EQ(str, s->str);
+}
+
+TEST_F(lists_test, list0)
+{
+	std::string s = "()";
+
+	t = a.eval(s);
+	l = dynamic_cast<list*>(t);
+	EXPECT_NE(nullptr, l);
+	EXPECT_EQ(a.hp.h[2], l);
 }

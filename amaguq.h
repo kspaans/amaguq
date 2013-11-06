@@ -47,6 +47,15 @@ struct strlit : atom {
 	std::string str;
 };
 
+struct list : atom {
+	list(atom*);
+	~list();
+
+	friend std::ostream& operator<<(std::ostream& stream, const list* a);
+
+	atom* a;
+};
+
 struct heap {
 	heap();
 	~heap();
