@@ -2,117 +2,14 @@
 #include <string>
 #include "amaguq.h"
 
-heap::heap()
-{
-	allocs = 0;
-}
 
-heap::~heap()
-{
-	std::vector<atom*>::iterator it;
 
-	for (it = h.begin(); it != h.end(); ++it) {
-		delete *it;
-	}
-}
 
-void heap::alloc(atom* a)
-{
-	h.push_back(a);
-	allocs += 1;
-}
 
-atom::~atom()
-{
-}
 
-std::ostream& operator<<(std::ostream& stream, const atom* a)
-{
-	(void)a;
-	stream << "()";
 
-	return stream;
-}
 
-fixnum::fixnum(const std::string& s)
-{
-	value = std::stoi(s);
-}
 
-fixnum::~fixnum()
-{
-}
-
-std::ostream& operator<<(std::ostream& stream, const fixnum* a)
-{
-	stream << a->value;
-
-	return stream;
-}
-
-boolean::boolean(const std::string& s)
-{
-	str = s;
-}
-
-boolean::~boolean()
-{
-}
-
-std::ostream& operator<<(std::ostream& stream, const boolean* a)
-{
-	stream << a->str;
-
-	return stream;
-}
-
-charlit::charlit(const std::string& s)
-{
-	str = s;
-}
-
-charlit::~charlit()
-{
-}
-
-std::ostream& operator<<(std::ostream& stream, const charlit* a)
-{
-	stream << a->str;
-
-	return stream;
-}
-
-strlit::strlit(const std::string& s)
-{
-	str = s;
-}
-
-strlit::~strlit()
-{
-}
-
-std::ostream& operator<<(std::ostream& stream, const strlit* a)
-{
-	stream << a->str;
-
-	return stream;
-}
-
-list::list(atom* t)
-{
-	a = t;
-}
-
-list::~list()
-{
-}
-
-std::ostream& operator<<(std::ostream& stream, const list* a)
-{
-	stream << "()";
-
-	return stream;
-}
 
 amaguq::amaguq()
 {

@@ -12,15 +12,15 @@ GTEST_SRCS_ = $(GTEST_DIR)/src/*.cc $(GTEST_DIR)/src/*.h $(GTEST_HEADERS)
 TESTS = Tests
 
 EXEC=Amaguq
-OBJS=main.o amaguq.o
+OBJS=amaguq.o heap.o atom.o fixnum.o boolean.o charlit.o strlit.o list.o
 DEPS=${OBJS:.o=.d}
 
 all: ${EXEC} ${TESTS}
 
-${EXEC}: ${OBJS}
-	${CXX} ${OBJS} -o ${EXEC}
+${EXEC}: main.o ${OBJS}
+	${CXX} main.o ${OBJS} -o ${EXEC}
 clean:
-	rm -vf ${EXEC} ${OBJS} ${DEPS}
+	rm -vf ${EXEC} ${OBJS} ${DEPS} ${TESTS}
 
 tests: ${TESTS}
 
@@ -46,7 +46,7 @@ gtest_main.a : gtest-all.o gtest_main.o
 tests.o : $(USER_DIR)/tests.cpp $(GTEST_HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/tests.cpp
 
-Tests : tests.o amaguq.o gtest_main.a
+Tests : tests.o ${OBJS} gtest_main.a
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
 ################################################################################
 

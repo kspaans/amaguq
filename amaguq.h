@@ -53,7 +53,8 @@ struct list : atom {
 
 	friend std::ostream& operator<<(std::ostream& stream, const list* a);
 
-	atom* a;
+	atom* car;
+	atom* cdr;
 };
 
 struct heap {

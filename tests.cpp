@@ -166,3 +166,13 @@ TEST_F(lists_test, list0)
 	EXPECT_NE(nullptr, l);
 	EXPECT_EQ(a.hp.h[2], l);
 }
+
+TEST_F(lists_test, list1)
+{
+	std::string s = "(0 . 1)";
+
+	t = a.eval(s);
+	l = dynamic_cast<list*>(t);
+	EXPECT_NE(nullptr, l);
+	EXPECT_EQ(a.hp.h[2], l);
+}
