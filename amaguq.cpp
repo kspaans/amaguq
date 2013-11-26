@@ -2,15 +2,6 @@
 #include <string>
 #include "amaguq.h"
 
-
-
-
-
-
-
-
-
-
 amaguq::amaguq()
 {
 	atom *a;
@@ -42,13 +33,12 @@ atom* char_helper(const std::string& s)
 	return c;
 }
 
-atom* str_helper(const std::string& s)
+atom* str_helper(const std::string& s, std::string::const_iterator& it)
 {
-	std::string::const_iterator it;
 	strlit* str;
 	unsigned sstate = 0x0;
 
-	for (it = s.begin(); it != s.end(); ++it) {
+	for (; it != s.end(); ++it) {
 		if (0x0 == sstate) {
 			if ('"' == *it) {
 				sstate = 0x1;
@@ -80,30 +70,35 @@ atom* str_helper(const std::string& s)
 	return str;
 }
 
-atom* list_helper(const std::string& s)
+atom* amaguq::eval_pair(const std::string& s, std::string::const_iterator& it)
 {
-	return nullptr;
+	atom* car;
+	atom* cdr;
+
+	car = read(s, it);
+	cdr = read(s, it);
+	
 }
 
-atom* amaguq::eval(const std::string& s)
+atom* amaguq::read(const std::string& s, std::string::const_iterator& it)
 {
 	atom *a = nullptr;
 
-	if (0 == s.find('#')) {
-		if (1 == s.find('t')) {
+	if ('#' == *it) {
+		if ('t' == *(it + 1)) {
 			return hp.h[0];
-		} else if (1 == s.find('f')) {
+		} else if ('f' == *(it + 1)) {
 			return hp.h[1];
-		} else if (1 == s.find('\\')) {
+		} else if ('\\' == *(it + 1)) {
 			a = char_helper(s);
 		}
-	} else if (0 == s.find('"')) {
-		a = str_helper(s);
-	} else if (0 == s.find('(')) {
-		if (1 == s.find(')')) {
-			return hp.h[2];
+	} else if ('"' == *it) {
+		a = str_helper(s, it);
+	} else if ('(' == *it) {
+		if (')' == *(it + 1)) {
+			return hp.h[2]; // empty list
 		} else {
-			a = list_helper(s);
+			a = eval_pair(s.substr(1), ++it);
 		}
 	} else {
 		a = new fixnum(s);
@@ -112,4 +107,11 @@ atom* amaguq::eval(const std::string& s)
 	hp.alloc(a);
 
 	return a;
+}
+
+atom* amaguq::eval(const std::string& s)
+{
+	std::string::const_iterator it = s.cbegin();
+
+	return read(s, it);
 }

@@ -76,6 +76,8 @@ struct amaguq {
 	~amaguq();
 
 	atom* eval(const std::string&);
+	atom* read(const std::string&, std::string::const_iterator&);
+	atom* eval_pair(const std::string&, std::string::const_iterator&);
 
 	heap hp;
 };
