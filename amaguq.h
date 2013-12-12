@@ -48,7 +48,7 @@ struct strlit : atom {
 };
 
 struct list : atom {
-	list(atom*);
+	list(atom*, atom*);
 	~list();
 
 	friend std::ostream& operator<<(std::ostream& stream, const list* a);

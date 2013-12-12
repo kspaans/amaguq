@@ -10,7 +10,7 @@ amaguq::amaguq()
 	hp.alloc(a);
 	a = new boolean("#f");
 	hp.alloc(a);
-	a = new list(nullptr); // "empty list"
+	a = new list(nullptr, nullptr); // "empty list"
 	hp.alloc(a);
 }
 
@@ -72,12 +72,27 @@ atom* str_helper(const std::string& s, std::string::const_iterator& it)
 
 atom* amaguq::eval_pair(const std::string& s, std::string::const_iterator& it)
 {
+	list* l;
 	atom* car;
 	atom* cdr;
 
 	car = read(s, it);
 	cdr = read(s, it);
 	
+	l = new list(car, cdr);
+
+	return l;
+}
+
+atom* split_on_space(const std::string& s)
+{
+	unsigned idx = 0;
+
+	while (s[idx] != ' ') {
+		idx += 1;
+	}
+
+	return new fixnum(std::string(s.c_str(), s.c_str() + idx));
 }
 
 atom* amaguq::read(const std::string& s, std::string::const_iterator& it)
@@ -101,7 +116,8 @@ atom* amaguq::read(const std::string& s, std::string::const_iterator& it)
 			a = eval_pair(s.substr(1), ++it);
 		}
 	} else {
-		a = new fixnum(s);
+		a = split_on_space(s); //new fixnum(s);
+		std::cout << "Got fixnum" << reinterpret_cast<fixnum*>(a) << std::endl;
 	}
 
 	hp.alloc(a);

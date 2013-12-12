@@ -1,10 +1,10 @@
 #include <iostream>
 #include "amaguq.h"
 
-list::list(atom* t)
+list::list(atom* t, atom *tt)
 {
 	car = t;
-	cdr = nullptr;
+	cdr = tt;
 }
 
 list::~list()
