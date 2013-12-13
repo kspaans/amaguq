@@ -18,17 +18,18 @@ amaguq::~amaguq()
 {
 }
 
-atom* char_helper(const std::string& s)
+atom* char_helper(const std::string& s, unsigned& idx)
 {
 	charlit *c;
 
-	if (2 == s.find(' ')) {
+	if (' ' == s[idx + 2]) {
 		c = new charlit("#\\space");
-	} else if (2 == s.find('\n')) {
+	} else if ('\n' == s[idx + 2]) {
 		c = new charlit("#\\newline");
 	} else {
 		c = new charlit(s);
 	}
+	idx += 2;
 
 	return c;
 }
@@ -85,20 +86,32 @@ atom* amaguq::eval_pair(const std::string& s, unsigned& idx)
 	return l;
 }
 
-atom* split_on_space(const std::string& s)
+atom* fixnum_helper(const std::string& s, unsigned& idx)
 {
-	unsigned idx = 0;
+	const unsigned init = idx;
+	const unsigned length = s.length();
 
-	while (s[idx] != ' ') {
+	while ((isalnum(s[idx]) || '-' == s[idx]) && idx <= length) {
 		idx += 1;
 	}
 
-	return new fixnum(std::string(s.c_str(), s.c_str() + idx));
+	std::string blah(s.c_str() + init, s.c_str() + idx);
+
+	return new fixnum(blah);
+}
+
+void gobble_whitespace(const std::string& s, unsigned& idx)
+{
+	while (s[idx] == ' ' || s[idx] == '\t') {
+		idx += 1;
+	}
 }
 
 atom* amaguq::read(const std::string& s, unsigned& idx)
 {
 	atom *a = nullptr;
+
+	gobble_whitespace(s, idx);
 
 	if ('#' == s[idx]) {
 		if ('t' == s[idx + 1]) {
@@ -106,7 +119,7 @@ atom* amaguq::read(const std::string& s, unsigned& idx)
 		} else if ('f' == s[idx + 1]) {
 			return hp.h[1];
 		} else if ('\\' == s[idx + 1]) {
-			a = char_helper(s);
+			a = char_helper(s, idx);
 		}
 	} else if ('"' == s[idx]) {
 		a = str_helper(s, idx);
@@ -114,11 +127,13 @@ atom* amaguq::read(const std::string& s, unsigned& idx)
 		if (')' == s[idx + 1]) {
 			return hp.h[2]; // empty list
 		} else {
-			a = eval_pair(s.substr(1), ++idx);
+			a = eval_pair(s, ++idx);
 		}
+	} else if ('.' == s[idx]) {
+		// list special? FIXME
+		return read(s, ++idx);
 	} else {
-		a = split_on_space(s); //new fixnum(s);
-		std::cout << "Got fixnum \'" << reinterpret_cast<fixnum*>(a) << "\'" << std::endl;
+		a = fixnum_helper(s, idx);
 	}
 
 	hp.alloc(a);

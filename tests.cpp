@@ -170,9 +170,29 @@ TEST_F(lists_test, list0)
 TEST_F(lists_test, list1)
 {
 	std::string s = "(0 . 1)";
+	fixnum* i1;
+	fixnum* i2;
 
 	t = a.eval(s);
 	l = dynamic_cast<list*>(t);
 	EXPECT_NE(nullptr, l);
-	EXPECT_EQ(a.hp.h[2], l);
+	i1 = reinterpret_cast<fixnum*>(l->car);
+	i2 = reinterpret_cast<fixnum*>(l->cdr);
+	EXPECT_EQ(0, i1->value);
+	EXPECT_EQ(1, i2->value);
+}
+
+TEST_F(lists_test, list2)
+{
+	std::string s = "(4567 . 13)";
+	fixnum* i1;
+	fixnum* i2;
+
+	t = a.eval(s);
+	l = dynamic_cast<list*>(t);
+	EXPECT_NE(nullptr, l);
+	i1 = reinterpret_cast<fixnum*>(l->car);
+	i2 = reinterpret_cast<fixnum*>(l->cdr);
+	EXPECT_EQ(4567, i1->value);
+	EXPECT_EQ(13, i2->value);
 }
