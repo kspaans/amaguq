@@ -33,28 +33,29 @@ atom* char_helper(const std::string& s)
 	return c;
 }
 
-atom* str_helper(const std::string& s, std::string::const_iterator& it)
+atom* str_helper(const std::string& s, unsigned& idx)
 {
 	strlit* str;
 	unsigned sstate = 0x0;
+	unsigned length = s.length();
 
-	for (; it != s.end(); ++it) {
+	for (; idx != length; ++idx) {
 		if (0x0 == sstate) {
-			if ('"' == *it) {
+			if ('"' == s[idx]) {
 				sstate = 0x1;
 			}
 		} else if (0x1 == sstate) {
-			if ('"' == *it) {
+			if ('"' == s[idx]) {
 				sstate = 0x2;
-			} else if ('\\' == *it) {
+			} else if ('\\' == s[idx]) {
 				sstate = 0x3;
 			}
 		} else if (0x2 == sstate) {
 			sstate = 0x8;
 		} else if (0x3 == sstate) {
-			if ('"' == *it) {
+			if ('"' == s[idx]) {
 				sstate = 0x1;
-			} else if ('n' == *it) {
+			} else if ('n' == s[idx]) {
 				sstate = 0x1;
 			}
 		}
@@ -70,14 +71,14 @@ atom* str_helper(const std::string& s, std::string::const_iterator& it)
 	return str;
 }
 
-atom* amaguq::eval_pair(const std::string& s, std::string::const_iterator& it)
+atom* amaguq::eval_pair(const std::string& s, unsigned& idx)
 {
 	list* l;
 	atom* car;
 	atom* cdr;
 
-	car = read(s, it);
-	cdr = read(s, it);
+	car = read(s, idx);
+	cdr = read(s, idx);
 	
 	l = new list(car, cdr);
 
@@ -95,29 +96,29 @@ atom* split_on_space(const std::string& s)
 	return new fixnum(std::string(s.c_str(), s.c_str() + idx));
 }
 
-atom* amaguq::read(const std::string& s, std::string::const_iterator& it)
+atom* amaguq::read(const std::string& s, unsigned& idx)
 {
 	atom *a = nullptr;
 
-	if ('#' == *it) {
-		if ('t' == *(it + 1)) {
+	if ('#' == s[idx]) {
+		if ('t' == s[idx + 1]) {
 			return hp.h[0];
-		} else if ('f' == *(it + 1)) {
+		} else if ('f' == s[idx + 1]) {
 			return hp.h[1];
-		} else if ('\\' == *(it + 1)) {
+		} else if ('\\' == s[idx + 1]) {
 			a = char_helper(s);
 		}
-	} else if ('"' == *it) {
-		a = str_helper(s, it);
-	} else if ('(' == *it) {
-		if (')' == *(it + 1)) {
+	} else if ('"' == s[idx]) {
+		a = str_helper(s, idx);
+	} else if ('(' == s[idx]) {
+		if (')' == s[idx + 1]) {
 			return hp.h[2]; // empty list
 		} else {
-			a = eval_pair(s.substr(1), ++it);
+			a = eval_pair(s.substr(1), ++idx);
 		}
 	} else {
 		a = split_on_space(s); //new fixnum(s);
-		std::cout << "Got fixnum" << reinterpret_cast<fixnum*>(a) << std::endl;
+		std::cout << "Got fixnum \'" << reinterpret_cast<fixnum*>(a) << "\'" << std::endl;
 	}
 
 	hp.alloc(a);
@@ -127,7 +128,7 @@ atom* amaguq::read(const std::string& s, std::string::const_iterator& it)
 
 atom* amaguq::eval(const std::string& s)
 {
-	std::string::const_iterator it = s.cbegin();
+	unsigned idx = 0;
 
-	return read(s, it);
+	return read(s, idx);
 }
