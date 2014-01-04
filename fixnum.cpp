@@ -4,6 +4,7 @@
 
 fixnum::fixnum(const std::string& s)
 {
+	atype = FIXNUM;
 	value = std::stoi(s);
 }
 

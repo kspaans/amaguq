@@ -5,6 +5,7 @@
 charlit::charlit(const std::string& s)
 {
 	str = s;
+	atype = CHARLIT;
 }
 
 charlit::~charlit()

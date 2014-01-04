@@ -40,6 +40,7 @@ TEST_F(ints_test, integers0)
 	t = a.eval(s);
 	i = dynamic_cast<fixnum*>(t);
 	EXPECT_NE(nullptr, i);
+	EXPECT_EQ(FIXNUM, i->atype);
 	EXPECT_EQ(123, i->value);
 }
 
@@ -182,7 +183,7 @@ TEST_F(lists_test, list1)
 	EXPECT_EQ(1, i2->value);
 }
 
-TEST_F(lists_test, list2)
+TEST_F(lists_test, listints)
 {
 	std::string s = "(4567 . 13)";
 	fixnum* i1;
@@ -195,4 +196,59 @@ TEST_F(lists_test, list2)
 	i2 = reinterpret_cast<fixnum*>(l->cdr);
 	EXPECT_EQ(4567, i1->value);
 	EXPECT_EQ(13, i2->value);
+}
+
+TEST_F(lists_test, listchars)
+{
+	std::string s = "(#\\k . #\\j)";
+	charlit* c1;
+	charlit* c2;
+
+	t = a.eval(s);
+	l = dynamic_cast<list*>(t);
+	EXPECT_NE(nullptr, l);
+	c1 = reinterpret_cast<charlit*>(l->car);
+	c2 = reinterpret_cast<charlit*>(l->cdr);
+	//EXPECT_EQ("#\\k", c1->str);
+	//EXPECT_EQ("#\\j", c2->str);
+}
+
+TEST_F(lists_test, list0empty)
+{
+	std::string s = "(0 . ())";
+	fixnum* i1;
+	list* l2;
+
+	t = a.eval(s);
+	EXPECT_EQ(LIST, t->atype);
+	l = reinterpret_cast<list*>(t);
+	EXPECT_NE(nullptr, l);
+	EXPECT_EQ(FIXNUM, l->car->atype);
+	EXPECT_EQ(LIST, l->cdr->atype);
+	i1 = reinterpret_cast<fixnum*>(l->car);
+	l2 = reinterpret_cast<list*>(l->cdr);
+	EXPECT_EQ(FIXNUM, i1->atype);
+	EXPECT_EQ(0, i1->value);
+	EXPECT_EQ(LIST, l2->atype);
+	EXPECT_EQ(a.hp.h[2], l2);
+}
+
+TEST_F(lists_test, list0empty2)
+{
+	std::string s = "(0 ())";
+	fixnum* i1;
+	list* l2;
+
+	t = a.eval(s);
+	EXPECT_EQ(LIST, t->atype);
+	l = reinterpret_cast<list*>(t);
+	EXPECT_NE(nullptr, l);
+	EXPECT_EQ(FIXNUM, l->car->atype);
+	EXPECT_EQ(LIST, l->cdr->atype);
+	i1 = reinterpret_cast<fixnum*>(l->car);
+	l2 = reinterpret_cast<list*>(l->cdr);
+	EXPECT_EQ(FIXNUM, i1->atype);
+	EXPECT_EQ(0, i1->value);
+	EXPECT_EQ(LIST, l2->atype);
+	EXPECT_EQ(a.hp.h[2], l2);
 }

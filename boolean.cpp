@@ -5,6 +5,7 @@
 boolean::boolean(const std::string& s)
 {
 	str = s;
+	atype = BOOLEAN;
 }
 
 boolean::~boolean()

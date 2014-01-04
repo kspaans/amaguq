@@ -29,7 +29,7 @@ atom* char_helper(const std::string& s, unsigned& idx)
 	} else {
 		c = new charlit(s);
 	}
-	idx += 2;
+	idx += 3;
 
 	return c;
 }
@@ -78,6 +78,7 @@ atom* amaguq::eval_pair(const std::string& s, unsigned& idx)
 	atom* car;
 	atom* cdr;
 
+
 	car = read(s, idx);
 	cdr = read(s, idx);
 	
@@ -113,30 +114,34 @@ atom* amaguq::read(const std::string& s, unsigned& idx)
 
 	gobble_whitespace(s, idx);
 
+
 	if ('#' == s[idx]) {
 		if ('t' == s[idx + 1]) {
-			return hp.h[0];
+			a = hp.h[0];
 		} else if ('f' == s[idx + 1]) {
-			return hp.h[1];
+			a = hp.h[1];
 		} else if ('\\' == s[idx + 1]) {
 			a = char_helper(s, idx);
+			hp.alloc(a);
 		}
 	} else if ('"' == s[idx]) {
 		a = str_helper(s, idx);
+		hp.alloc(a);
 	} else if ('(' == s[idx]) {
 		if (')' == s[idx + 1]) {
-			return hp.h[2]; // empty list
+			idx += 2;
+			a = hp.h[2]; // empty list
 		} else {
 			a = eval_pair(s, ++idx);
+			hp.alloc(a);
 		}
 	} else if ('.' == s[idx]) {
 		// list special? FIXME
-		return read(s, ++idx);
+		a = read(s, ++idx);
 	} else {
 		a = fixnum_helper(s, idx);
+		hp.alloc(a);
 	}
-
-	hp.alloc(a);
 
 	return a;
 }

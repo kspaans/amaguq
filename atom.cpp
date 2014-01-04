@@ -3,6 +3,7 @@
 
 atom::~atom()
 {
+	atype = ATOM;
 }
 
 std::ostream& operator<<(std::ostream& stream, const atom* a)

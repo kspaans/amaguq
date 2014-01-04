@@ -5,10 +5,21 @@
 #include <string>
 #include <vector>
 
+enum a_type {
+	ATOM,
+	FIXNUM,
+	BOOLEAN,
+	CHARLIT,
+	STRLIT,
+	LIST,
+};
+
 struct atom {
 	virtual ~atom();
 
 	friend std::ostream& operator<<(std::ostream& stream, const atom* a);
+
+	a_type atype;
 };
 
 struct fixnum : atom {
