@@ -252,3 +252,29 @@ TEST_F(lists_test, list0empty2)
 	EXPECT_EQ(LIST, l2->atype);
 	EXPECT_EQ(a.hp.h[2], l2);
 }
+
+TEST_F(lists_test, list123)
+{
+	std::string s = "(1 . (2 . (3 . ())))";
+	fixnum* i;
+	list *l2;
+
+	t = a.eval(s);
+	EXPECT_EQ(LIST, t->atype);
+	l = reinterpret_cast<list*>(t);
+	EXPECT_NE(nullptr, l);
+	EXPECT_EQ(FIXNUM, l->car->atype);
+	EXPECT_EQ(LIST, l->cdr->atype);
+	i = reinterpret_cast<fixnum*>(l->car);
+	EXPECT_EQ(FIXNUM, i->atype);
+	EXPECT_EQ(1, i->value);
+	l2 = reinterpret_cast<list*>(l->cdr);
+	i = reinterpret_cast<fixnum*>(l2->car);
+	EXPECT_EQ(FIXNUM, i->atype);
+	EXPECT_EQ(2, i->value);
+	l2 = reinterpret_cast<list*>(l2->cdr);
+	i = reinterpret_cast<fixnum*>(l2->car);
+	EXPECT_EQ(FIXNUM, i->atype);
+	EXPECT_EQ(3, i->value);
+	EXPECT_EQ(a.hp.h[2], l2->cdr);
+}
