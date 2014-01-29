@@ -101,6 +101,20 @@ atom* fixnum_helper(const std::string& s, unsigned& idx)
 	return new fixnum(blah);
 }
 
+symbol* symbol_helper(const std::string& s, unsigned& idx)
+{
+	const unsigned init = idx;
+	const unsigned length = s.length();
+
+	while (isalnum(s[idx]) && idx <= length) {
+		idx += 1;
+	}
+
+	std::string blah(s.c_str() + init, s.c_str() + idx);
+
+	return new symbol(blah);
+}
+
 void gobble_whitespace(const std::string& s, unsigned& idx)
 {
 	while (s[idx] == ' ' || s[idx] == '\t') {
@@ -138,6 +152,10 @@ atom* amaguq::read(const std::string& s, unsigned& idx)
 	} else if ('.' == s[idx]) {
 		// list special? FIXME
 		a = read(s, ++idx);
+	} else if ((s[idx] >= 'a' && s[idx] <= 'z')
+			|| (s[idx] >= 'A' && s[idx] <= 'Z')) {
+		a = symbol_helper(s, idx);
+		hp.alloc(a);
 	} else {
 		a = fixnum_helper(s, idx);
 		hp.alloc(a);

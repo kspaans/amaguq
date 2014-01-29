@@ -16,6 +16,7 @@ void print(atom *a)
 	boolean* b;
 	charlit* c;
 	strlit*  s;
+	symbol* sy;
 
 	fn = dynamic_cast<fixnum*>(a);
 	if (nullptr != fn) {
@@ -35,6 +36,16 @@ void print(atom *a)
 	s = dynamic_cast<strlit*>(a);
 	if (nullptr != s) {
 		std::cout << s;
+		goto done;
+	}
+	switch (a->atype) {
+	case SYMBOL:
+		sy = reinterpret_cast<symbol*>(a);
+		std::cout << sy;
+		goto done;
+
+	default:
+		std::cout << "Whoops!" << std::endl;
 		goto done;
 	}
 

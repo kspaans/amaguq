@@ -12,7 +12,8 @@ GTEST_SRCS_ = $(GTEST_DIR)/src/*.cc $(GTEST_DIR)/src/*.h $(GTEST_HEADERS)
 TESTS = Tests
 
 EXEC=Amaguq
-OBJS=amaguq.o heap.o atom.o fixnum.o boolean.o charlit.o strlit.o list.o
+OBJS=amaguq.o heap.o atom.o fixnum.o boolean.o charlit.o strlit.o list.o \
+		 symbol.o
 DEPS=${OBJS:.o=.d}
 
 all: ${EXEC} ${TESTS}

@@ -12,6 +12,7 @@ enum a_type {
 	CHARLIT,
 	STRLIT,
 	LIST,
+	SYMBOL,
 };
 
 struct atom {
@@ -66,6 +67,15 @@ struct list : atom {
 
 	atom* car;
 	atom* cdr;
+};
+
+struct symbol : atom {
+	symbol(const std::string&);
+	~symbol();
+
+	friend std::ostream& operator<<(std::ostream& stream, const symbol* s);
+
+	std::string sym;
 };
 
 struct heap {

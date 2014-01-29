@@ -33,6 +33,12 @@ struct lists_test : testing::Test {
 	list* l;
 };
 
+struct symbols_test : testing::Test {
+	amaguq a;
+	atom* t;
+	symbol* sy;
+};
+
 TEST_F(ints_test, integers0)
 {
 	std::string s = "123";
@@ -277,4 +283,16 @@ TEST_F(lists_test, list123)
 	EXPECT_EQ(FIXNUM, i->atype);
 	EXPECT_EQ(3, i->value);
 	EXPECT_EQ(a.hp.h[2], l2->cdr);
+}
+
+TEST_F(symbols_test, symbolasdf)
+{
+	std::string s = "asdf";
+
+	t = a.eval(s);
+	EXPECT_EQ(SYMBOL, t->atype);
+	sy = reinterpret_cast<symbol*>(t);
+	EXPECT_NE(nullptr, sy);
+	EXPECT_EQ(SYMBOL, sy->atype);
+	EXPECT_EQ(sy->sym, s);
 }
