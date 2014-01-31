@@ -1,5 +1,3 @@
-#include <iostream>
-#include <string>
 #include "amaguq.h"
 
 boolean::boolean(const std::string& s)
@@ -12,9 +10,12 @@ boolean::~boolean()
 {
 }
 
-std::ostream& operator<<(std::ostream& stream, const boolean* a)
+std::string boolean::print()
 {
-	stream << a->str;
+	return str;
+}
 
-	return stream;
+atom* boolean::eval()
+{
+	return this;
 }

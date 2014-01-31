@@ -18,7 +18,8 @@ enum a_type {
 struct atom {
 	virtual ~atom();
 
-	friend std::ostream& operator<<(std::ostream& stream, const atom* a);
+	virtual std::string print();
+	virtual atom* eval();
 
 	a_type atype;
 };
@@ -27,7 +28,8 @@ struct fixnum : atom {
 	fixnum(const std::string&);
 	~fixnum();
 
-	friend std::ostream& operator<<(std::ostream& stream, const fixnum* a);
+	virtual std::string print();
+	virtual atom* eval();
 
 	int value;
 };
@@ -36,7 +38,8 @@ struct boolean : atom {
 	boolean(const std::string&);
 	~boolean();
 
-	friend std::ostream& operator<<(std::ostream& stream, const boolean* a);
+	virtual std::string print();
+	virtual atom* eval();
 
 	std::string str;
 };
@@ -45,7 +48,8 @@ struct charlit : atom {
 	charlit(const std::string&);
 	~charlit();
 
-	friend std::ostream& operator<<(std::ostream& stream, const charlit* a);
+	virtual std::string print();
+	virtual atom* eval();
 
 	std::string str;
 };
@@ -54,7 +58,8 @@ struct strlit : atom {
 	strlit(const std::string&);
 	~strlit();
 
-	friend std::ostream& operator<<(std::ostream& stream, const strlit* a);
+	virtual std::string print();
+	virtual atom* eval();
 
 	std::string str;
 };
@@ -63,7 +68,8 @@ struct list : atom {
 	list(atom*, atom*);
 	~list();
 
-	friend std::ostream& operator<<(std::ostream& stream, const list* a);
+	virtual std::string print();
+	virtual atom* eval();
 
 	atom* car;
 	atom* cdr;
@@ -73,7 +79,8 @@ struct symbol : atom {
 	symbol(const std::string&);
 	~symbol();
 
-	friend std::ostream& operator<<(std::ostream& stream, const symbol* s);
+	virtual std::string print();
+	virtual atom* eval();
 
 	std::string sym;
 };

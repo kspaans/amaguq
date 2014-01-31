@@ -1,4 +1,4 @@
-#include <iostream>
+#include <sstream>
 #include "amaguq.h"
 
 list::list(atom* t, atom *tt)
@@ -12,11 +12,16 @@ list::~list()
 {
 }
 
-std::ostream& operator<<(std::ostream& stream, const list* a)
+std::string list::print()
 {
-	stream << "()";
-	// TODO pretty printing of lists
-	(void)a;
+	std::stringstream s;
 
-	return stream;
+	s << "(" << car->print() << " " << cdr->print() << ")";
+
+	return s.str();
+}
+
+atom* list::eval()
+{
+	return this;
 }

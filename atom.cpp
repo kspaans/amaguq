@@ -1,4 +1,4 @@
-#include <iostream>
+#include <sstream>
 #include "amaguq.h"
 
 atom::~atom()
@@ -6,10 +6,18 @@ atom::~atom()
 	atype = ATOM;
 }
 
-std::ostream& operator<<(std::ostream& stream, const atom* a)
+std::string atom::print()
 {
-	(void)a;
-	stream << "()";
+	std::stringstream s;
 
-	return stream;
+	s << "{atom:" << this << "}";
+	return s.str();
+}
+
+/*
+ * We should never get a bare atom, so this may be a bug?
+ */
+atom* atom::eval()
+{
+	return this;
 }

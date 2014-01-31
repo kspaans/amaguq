@@ -21,7 +21,7 @@ all: ${EXEC} ${TESTS}
 ${EXEC}: main.o ${OBJS}
 	${CXX} main.o ${OBJS} -o ${EXEC}
 clean:
-	rm -vf ${EXEC} ${OBJS} ${DEPS} ${TESTS}
+	rm -vf ${EXEC} ${OBJS} ${DEPS} ${TESTS} gtest_main.a gtest_main.o gtest-all.o tests.o
 
 tests: ${TESTS}
 
@@ -44,7 +44,7 @@ gtest_main.a : gtest-all.o gtest_main.o
 # gtest_main.a, depending on whether it defines its own main()
 # function.
 
-tests.o : $(USER_DIR)/tests.cpp $(GTEST_HEADERS)
+tests.o : $(USER_DIR)/tests.cpp $(GTEST_HEADERS) amaguq.h
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/tests.cpp
 
 Tests : tests.o ${OBJS} gtest_main.a

@@ -39,6 +39,13 @@ struct symbols_test : testing::Test {
 	symbol* sy;
 };
 
+struct quote_test : testing::Test {
+	amaguq a;
+	atom* t;
+};
+
+//TEST(atom_test, 
+
 TEST_F(ints_test, integers0)
 {
 	std::string s = "123";
@@ -295,4 +302,22 @@ TEST_F(symbols_test, symbolasdf)
 	EXPECT_NE(nullptr, sy);
 	EXPECT_EQ(SYMBOL, sy->atype);
 	EXPECT_EQ(sy->sym, s);
+}
+
+TEST_F(quote_test, quote_sym)
+{
+	std::string s = "(quote a)";
+
+	t = a.eval(s);
+	t = t->eval();
+	EXPECT_EQ("a", t->print());
+}
+
+TEST_F(quote_test, quote_tick)
+{
+	std::string s = "'a";
+
+	t = a.eval(s);
+	t = t->eval();
+	EXPECT_EQ("a", t->print());
 }

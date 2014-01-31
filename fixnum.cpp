@@ -1,5 +1,4 @@
-#include <iostream>
-#include <string>
+#include <sstream>
 #include "amaguq.h"
 
 fixnum::fixnum(const std::string& s)
@@ -12,9 +11,15 @@ fixnum::~fixnum()
 {
 }
 
-std::ostream& operator<<(std::ostream& stream, const fixnum* a)
+std::string fixnum::print()
 {
-	stream << a->value;
+	std::stringstream s;
 
-	return stream;
+	s << value;
+	return s.str();
+}
+
+atom* fixnum::eval()
+{
+	return this;
 }

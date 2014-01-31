@@ -12,9 +12,12 @@ symbol::~symbol()
 {
 }
 
-std::ostream& operator<<(std::ostream& stream, const symbol* a)
+std::string symbol::print()
 {
-	stream << a->sym;
+	return "";
+}
 
-	return stream;
+atom* symbol::eval()
+{
+	return this;
 }

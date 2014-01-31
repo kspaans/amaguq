@@ -1,5 +1,3 @@
-#include <iostream>
-#include <string>
 #include "amaguq.h"
 
 charlit::charlit(const std::string& s)
@@ -12,9 +10,12 @@ charlit::~charlit()
 {
 }
 
-std::ostream& operator<<(std::ostream& stream, const charlit* a)
+std::string charlit::print()
 {
-	stream << a->str;
+	return str;
+}
 
-	return stream;
+atom* charlit::eval()
+{
+	return this;
 }
