@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <exception>
 #include "amaguq.h"
 
 std::string read(void)
@@ -27,7 +28,12 @@ int main(void)
 	while (1) {
 		std::cout << "> ";
 		line = read();
-		at = a.eval(line);
+		try {
+			at = a.eval(line);
+		} catch (std::exception& e) {
+			std::cout << "Error: " << e.what() << std::endl;
+			continue;
+		}
 		print(at);
 		// LOOP!
 	}

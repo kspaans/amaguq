@@ -318,6 +318,5 @@ TEST_F(quote_test, quote_tick)
 	std::string s = "'a";
 
 	t = a.eval(s);
-	t = t->eval();
 	EXPECT_EQ("a", t->print());
 }

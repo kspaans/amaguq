@@ -6,18 +6,25 @@
 
 const std::string KEYWORD_QUOTE("quote");
 
-symbol* eval_symbol(list* l)
+atom* eval_quote(atom* a)
+{
+	if (SYMBOL == a->atype) {
+		return a;
+	} else {
+		throw std::logic_error("Cannot quote this type");
+	}
+
+	return a;
+}
+
+atom* eval_symbol(list* l)
 {
 	symbol* s = static_cast<symbol*>(l->car);
 
 	if (s->sym == KEYWORD_QUOTE) {
 		std::cout << "quoting eval: " << std::endl;
-		if (SYMBOL == l->cdr->atype) {
-			// TODO destroy the parent list?
-			return static_cast<symbol*>(l->cdr);
-		} else {
-			throw std::logic_error("Cannot quote this type");
-		}
+		// TODO destroy the parent list?
+		return eval_quote(l->cdr);
 	} else {
 		std::cout << "unknown symbol!!!!!" << std::endl;
 	}

@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include "amaguq.h"
+#include "eval.h"
 
 amaguq::amaguq()
 {
@@ -156,6 +157,10 @@ atom* amaguq::read(const std::string& s, unsigned& idx)
 			|| (s[idx] >= 'A' && s[idx] <= 'Z')) {
 		a = symbol_helper(s, idx);
 		hp.alloc(a);
+	} else if (('\'' == s[idx])) {
+		a = read(s, ++idx);
+		// TODO should the intermediate stuff be added to the heap?
+		a = eval_quote(a);
 	} else {
 		a = fixnum_helper(s, idx);
 		hp.alloc(a);

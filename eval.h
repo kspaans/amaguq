@@ -3,6 +3,7 @@
 
 #include "amaguq.h"
 
-symbol* eval_symbol(list* a);
+atom* eval_quote(atom* a);
+atom* eval_symbol(list* a);
 
 #endif
