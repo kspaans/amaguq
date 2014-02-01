@@ -13,7 +13,7 @@ TESTS = Tests
 
 EXEC=Amaguq
 OBJS=amaguq.o heap.o atom.o fixnum.o boolean.o charlit.o strlit.o list.o \
-		 symbol.o
+		 symbol.o eval.o
 DEPS=${OBJS:.o=.d}
 
 all: ${EXEC} ${TESTS}
