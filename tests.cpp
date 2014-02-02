@@ -7,36 +7,42 @@ struct ints_test : testing::Test {
 	amaguq a;
 	atom* t;
 	fixnum* i;
+	atom* a2;
 };
 
 struct bools_test : testing::Test {
 	amaguq a;
 	atom* t;
 	boolean* b;
+	atom* a2;
 };
 
 struct chars_test : testing::Test {
 	amaguq a;
 	atom* t;
 	charlit* c;
+	atom* a2;
 };
 
 struct strings_test : testing::Test {
 	amaguq a;
 	atom* t;
 	strlit* s;
+	atom* a2;
 };
 
 struct lists_test : testing::Test {
 	amaguq a;
 	atom* t;
 	list* l;
+	atom* a2;
 };
 
 struct symbols_test : testing::Test {
 	amaguq a;
 	atom* t;
 	symbol* sy;
+	atom* a2;
 };
 
 struct quote_test : testing::Test {
@@ -51,10 +57,20 @@ TEST_F(ints_test, integers0)
 	std::string s = "123";
 
 	t = a.eval(s);
-	i = dynamic_cast<fixnum*>(t);
+	i = static_cast<fixnum*>(t);
 	EXPECT_NE(nullptr, i);
 	EXPECT_EQ(FIXNUM, i->atype);
 	EXPECT_EQ(123, i->value);
+}
+
+TEST_F(ints_test, ints_self_eval)
+{
+	std::string s = "74621";
+
+	t = a.eval(s);
+	a2 = t->eval();
+	EXPECT_EQ(a2, t);
+	EXPECT_EQ("74621", a2->print());
 }
 
 TEST_F(ints_test, integers1)
@@ -62,7 +78,7 @@ TEST_F(ints_test, integers1)
 	std::string s = "-123";
 
 	t = a.eval(s);
-	i = dynamic_cast<fixnum*>(t);
+	i = static_cast<fixnum*>(t);
 	EXPECT_NE(nullptr, i);
 	EXPECT_EQ(-123, i->value);
 }
@@ -72,7 +88,7 @@ TEST_F(ints_test, integers2)
 	std::string s = "007";
 
 	t = a.eval(s);
-	i = dynamic_cast<fixnum*>(t);
+	i = static_cast<fixnum*>(t);
 	EXPECT_NE(nullptr, i);
 	EXPECT_EQ(7, i->value);
 }
@@ -82,8 +98,18 @@ TEST_F(bools_test, booleans0)
 	std::string s = "#t";
 
 	t = a.eval(s);
-	b = dynamic_cast<boolean*>(t);
+	b = static_cast<boolean*>(t);
 	EXPECT_NE(nullptr, b);
+}
+
+TEST_F(bools_test, bools_self_eval)
+{
+	std::string s = "#t";
+
+	t = a.eval(s);
+	a2 = t->eval();
+	EXPECT_EQ(a2, t);
+	EXPECT_EQ("#t", a2->print());
 }
 
 TEST_F(bools_test, booleans1)
@@ -91,7 +117,7 @@ TEST_F(bools_test, booleans1)
 	std::string s = "#f";
 
 	t = a.eval(s);
-	b = dynamic_cast<boolean*>(t);
+	b = static_cast<boolean*>(t);
 	EXPECT_NE(nullptr, b);
 }
 
@@ -116,9 +142,19 @@ TEST_F(chars_test, chars0)
 	std::string s = "#\\a";
 
 	t = a.eval(s);
-	c = dynamic_cast<charlit*>(t);
+	c = static_cast<charlit*>(t);
 	EXPECT_NE(nullptr, c);
 	EXPECT_EQ(s, c->str);
+}
+
+TEST_F(chars_test, chars_self_eval)
+{
+	std::string s = "#\\C";
+
+	t = a.eval(s);
+	a2 = t->eval();
+	EXPECT_EQ(a2, t);
+	EXPECT_EQ("#\\C", a2->print());
 }
 
 TEST_F(chars_test, chars1)
@@ -126,7 +162,7 @@ TEST_F(chars_test, chars1)
 	std::string s = "#\\ ";
 
 	t = a.eval(s);
-	c = dynamic_cast<charlit*>(t);
+	c = static_cast<charlit*>(t);
 	EXPECT_NE(nullptr, c);
 	EXPECT_EQ("#\\space", c->str);
 }
@@ -136,7 +172,7 @@ TEST_F(chars_test, chars2)
 	std::string s = "#\\\n";
 
 	t = a.eval(s);
-	c = dynamic_cast<charlit*>(t);
+	c = static_cast<charlit*>(t);
 	EXPECT_NE(nullptr, c);
 	EXPECT_EQ("#\\newline", c->str);
 }
@@ -146,9 +182,19 @@ TEST_F(strings_test, str0)
 	std::string str = "\"asdf\"";
 
 	t = a.eval(str);
-	s = dynamic_cast<strlit*>(t);
+	s = static_cast<strlit*>(t);
 	EXPECT_NE(nullptr, s);
 	EXPECT_EQ(str, s->str);
+}
+
+TEST_F(strings_test, strings_self_eval)
+{
+	std::string s = "\"elyK\"";
+
+	t = a.eval(s);
+	a2 = t->eval();
+	EXPECT_EQ(a2, t);
+	EXPECT_EQ("\"elyK\"", a2->print());
 }
 
 TEST_F(strings_test, str1)
@@ -156,7 +202,7 @@ TEST_F(strings_test, str1)
 	std::string str = "\"asdf\\\"asdf\"";
 
 	t = a.eval(str);
-	s = dynamic_cast<strlit*>(t);
+	s = static_cast<strlit*>(t);
 	EXPECT_NE(nullptr, s);
 	EXPECT_EQ(str, s->str);
 }
@@ -166,7 +212,7 @@ TEST_F(strings_test, str2)
 	std::string str = "\"asdf\\n\"";
 
 	t = a.eval(str);
-	s = dynamic_cast<strlit*>(t);
+	s = static_cast<strlit*>(t);
 	EXPECT_NE(nullptr, s);
 	EXPECT_EQ(str, s->str);
 }
@@ -176,9 +222,27 @@ TEST_F(lists_test, list0)
 	std::string s = "()";
 
 	t = a.eval(s);
-	l = dynamic_cast<list*>(t);
+	l = static_cast<list*>(t);
 	EXPECT_NE(nullptr, l);
 	EXPECT_EQ(a.hp.h[2], l);
+}
+
+TEST_F(lists_test, list_empty_doesnt_self_eval)
+{
+	std::string s = "()";
+
+	t = a.eval(s);
+	// TODO not use exceptions for program errors
+	EXPECT_THROW(a2 = t->eval(), std::logic_error);
+}
+
+TEST_F(lists_test, lists_dont_self_eval)
+{
+	std::string s = "(55 ())";
+
+	t = a.eval(s);
+	// TODO not use exceptions for program errors
+	EXPECT_THROW(a2 = t->eval(), std::logic_error);
 }
 
 TEST_F(lists_test, list1)
@@ -188,10 +252,10 @@ TEST_F(lists_test, list1)
 	fixnum* i2;
 
 	t = a.eval(s);
-	l = dynamic_cast<list*>(t);
+	l = static_cast<list*>(t);
 	EXPECT_NE(nullptr, l);
-	i1 = reinterpret_cast<fixnum*>(l->car);
-	i2 = reinterpret_cast<fixnum*>(l->cdr);
+	i1 = static_cast<fixnum*>(l->car);
+	i2 = static_cast<fixnum*>(l->cdr);
 	EXPECT_EQ(0, i1->value);
 	EXPECT_EQ(1, i2->value);
 }
@@ -203,10 +267,10 @@ TEST_F(lists_test, listints)
 	fixnum* i2;
 
 	t = a.eval(s);
-	l = dynamic_cast<list*>(t);
+	l = static_cast<list*>(t);
 	EXPECT_NE(nullptr, l);
-	i1 = reinterpret_cast<fixnum*>(l->car);
-	i2 = reinterpret_cast<fixnum*>(l->cdr);
+	i1 = static_cast<fixnum*>(l->car);
+	i2 = static_cast<fixnum*>(l->cdr);
 	EXPECT_EQ(4567, i1->value);
 	EXPECT_EQ(13, i2->value);
 }
@@ -218,10 +282,10 @@ TEST_F(lists_test, listchars)
 	charlit* c2;
 
 	t = a.eval(s);
-	l = dynamic_cast<list*>(t);
+	l = static_cast<list*>(t);
 	EXPECT_NE(nullptr, l);
-	c1 = reinterpret_cast<charlit*>(l->car);
-	c2 = reinterpret_cast<charlit*>(l->cdr);
+	c1 = static_cast<charlit*>(l->car);
+	c2 = static_cast<charlit*>(l->cdr);
 	//EXPECT_EQ("#\\k", c1->str);
 	//EXPECT_EQ("#\\j", c2->str);
 }
@@ -234,12 +298,12 @@ TEST_F(lists_test, list0empty)
 
 	t = a.eval(s);
 	EXPECT_EQ(LIST, t->atype);
-	l = reinterpret_cast<list*>(t);
+	l = static_cast<list*>(t);
 	EXPECT_NE(nullptr, l);
 	EXPECT_EQ(FIXNUM, l->car->atype);
 	EXPECT_EQ(LIST, l->cdr->atype);
-	i1 = reinterpret_cast<fixnum*>(l->car);
-	l2 = reinterpret_cast<list*>(l->cdr);
+	i1 = static_cast<fixnum*>(l->car);
+	l2 = static_cast<list*>(l->cdr);
 	EXPECT_EQ(FIXNUM, i1->atype);
 	EXPECT_EQ(0, i1->value);
 	EXPECT_EQ(LIST, l2->atype);
@@ -254,12 +318,12 @@ TEST_F(lists_test, list0empty2)
 
 	t = a.eval(s);
 	EXPECT_EQ(LIST, t->atype);
-	l = reinterpret_cast<list*>(t);
+	l = static_cast<list*>(t);
 	EXPECT_NE(nullptr, l);
 	EXPECT_EQ(FIXNUM, l->car->atype);
 	EXPECT_EQ(LIST, l->cdr->atype);
-	i1 = reinterpret_cast<fixnum*>(l->car);
-	l2 = reinterpret_cast<list*>(l->cdr);
+	i1 = static_cast<fixnum*>(l->car);
+	l2 = static_cast<list*>(l->cdr);
 	EXPECT_EQ(FIXNUM, i1->atype);
 	EXPECT_EQ(0, i1->value);
 	EXPECT_EQ(LIST, l2->atype);
@@ -274,19 +338,19 @@ TEST_F(lists_test, list123)
 
 	t = a.eval(s);
 	EXPECT_EQ(LIST, t->atype);
-	l = reinterpret_cast<list*>(t);
+	l = static_cast<list*>(t);
 	EXPECT_NE(nullptr, l);
 	EXPECT_EQ(FIXNUM, l->car->atype);
 	EXPECT_EQ(LIST, l->cdr->atype);
-	i = reinterpret_cast<fixnum*>(l->car);
+	i = static_cast<fixnum*>(l->car);
 	EXPECT_EQ(FIXNUM, i->atype);
 	EXPECT_EQ(1, i->value);
-	l2 = reinterpret_cast<list*>(l->cdr);
-	i = reinterpret_cast<fixnum*>(l2->car);
+	l2 = static_cast<list*>(l->cdr);
+	i = static_cast<fixnum*>(l2->car);
 	EXPECT_EQ(FIXNUM, i->atype);
 	EXPECT_EQ(2, i->value);
-	l2 = reinterpret_cast<list*>(l2->cdr);
-	i = reinterpret_cast<fixnum*>(l2->car);
+	l2 = static_cast<list*>(l2->cdr);
+	i = static_cast<fixnum*>(l2->car);
 	EXPECT_EQ(FIXNUM, i->atype);
 	EXPECT_EQ(3, i->value);
 	EXPECT_EQ(a.hp.h[2], l2->cdr);
@@ -298,10 +362,18 @@ TEST_F(symbols_test, symbolasdf)
 
 	t = a.eval(s);
 	EXPECT_EQ(SYMBOL, t->atype);
-	sy = reinterpret_cast<symbol*>(t);
+	sy = static_cast<symbol*>(t);
 	EXPECT_NE(nullptr, sy);
 	EXPECT_EQ(SYMBOL, sy->atype);
 	EXPECT_EQ(sy->sym, s);
+}
+
+TEST_F(symbols_test, symbol_not_self_eval)
+{
+	std::string s = "asymbol";
+
+	t = a.eval(s);
+	EXPECT_THROW(a2 = t->eval(), std::logic_error);
 }
 
 TEST_F(quote_test, quote_sym)
@@ -319,4 +391,12 @@ TEST_F(quote_test, quote_tick)
 
 	t = a.eval(s);
 	EXPECT_EQ("a", t->print());
+}
+
+TEST_F(quote_test, quote_fixnum)
+{
+	std::string s = "'1";
+
+	t = a.eval(s);
+	EXPECT_EQ("1", t->print());
 }

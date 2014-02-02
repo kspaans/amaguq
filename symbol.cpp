@@ -1,3 +1,4 @@
+#include <stdexcept>
 #include "amaguq.h"
 
 symbol::symbol(const std::string& a)
@@ -17,6 +18,6 @@ std::string symbol::print()
 
 atom* symbol::eval()
 {
-	// TODO symbols aren't self-evaluating
-	return this;
+	// TODO look up the symbol in the environment
+	throw std::logic_error("Symbol not found in environment");
 }

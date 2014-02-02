@@ -103,6 +103,7 @@ struct amaguq {
 	amaguq();
 	~amaguq();
 
+	// TODO change this to 'read' or similar
 	atom* eval(const std::string&);
 	atom* read(const std::string&, unsigned&);
 	atom* eval_pair(const std::string&, unsigned&);

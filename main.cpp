@@ -28,13 +28,14 @@ int main(void)
 	while (1) {
 		std::cout << "> ";
 		line = read();
+		if (std::cin.eof()) break;
 		try {
 			at = a.eval(line);
 		} catch (std::exception& e) {
 			std::cout << "Error: " << e.what() << std::endl;
 			continue;
 		}
-		print(at);
+		print(at->eval());
 		// LOOP!
 	}
 

@@ -31,6 +31,6 @@ atom* list::eval()
 	if (SYMBOL == car->atype) {
 		return eval_symbol(this);
 	} else {
-		return this;
+		throw std::logic_error("Cannot evaluate list");
 	}
 }
