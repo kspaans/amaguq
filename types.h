@@ -93,14 +93,4 @@ struct quote : atom {
 	atom* q;
 };
 
-struct heap {
-	heap();
-	~heap();
-
-	void alloc(atom*);
-
-	std::vector<atom*> h;
-	int allocs;
-};
-
 #endif

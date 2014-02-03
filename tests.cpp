@@ -50,7 +50,11 @@ struct quote_test : testing::Test {
 	atom* t;
 };
 
-//TEST(atom_test, 
+struct env_test : testing::Test {
+	amaguq a;
+	atom *t;
+	table::iterator it;
+};
 
 TEST_F(ints_test, integers0)
 {
@@ -428,4 +432,19 @@ TEST_F(quote_test, quote_string)
 	t = a.eval(s);
 	t = t->eval();
 	EXPECT_EQ("\"alpha to omega\"", t->print());
+}
+
+TEST_F(env_test, define0)
+{
+	std::string s = "(define a 0)";
+	fixnum* i;
+
+	t = a.eval(s);
+	t = t->eval(); // returns 'ok, but we don't actually care
+
+	it = a.env.symbol_table.find("a");
+	EXPECT_NE(a.env.symbol_table.end(), it);
+	EXPECT_EQ(it->second->atype, FIXNUM);
+	i = static_cast<fixnum*>(it->second);
+	EXPECT_EQ(i->value, 0);
 }

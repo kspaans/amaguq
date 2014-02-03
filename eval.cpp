@@ -1,4 +1,5 @@
 #include <string>
+#include <sstream>
 #include <stdexcept>
 #include "amaguq.h"
 #include "eval.h"
@@ -32,7 +33,9 @@ atom* eval_symbol(list* l)
 		// TODO destroy the parent list?
 		return eval_quote(l->cdr);
 	} else {
-		(void)l;
+		std::stringstream err;
+		err << "Unknown symbol: " << s->sym;
+		throw std::logic_error(err.str());
 	}
 
 	return s;

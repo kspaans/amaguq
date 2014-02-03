@@ -4,7 +4,25 @@
 #include <ostream>
 #include <string>
 #include <vector>
+#include <map>
 #include "types.h"
+
+typedef std::map<std::string, atom*> table;
+
+struct environment {
+	environment* parent;
+	table symbol_table;
+};
+
+struct heap {
+	heap();
+	~heap();
+
+	void alloc(atom*);
+
+	std::vector<atom*> h;
+	int allocs;
+};
 
 /*
  * Encompases everything needed to lex, parse, and Evaluate code. Reading,
@@ -20,6 +38,7 @@ struct amaguq {
 	atom* eval_pair(const std::string&, unsigned&);
 
 	heap hp;
+	environment env;
 };
 
 #endif
