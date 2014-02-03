@@ -19,6 +19,7 @@ std::string list::print()
 	std::stringstream s;
 
 	if (nullptr == car && nullptr == cdr) {
+		// TODO make empty list be a subclass of the list class
 		s << "()";
 	} else {
 		s << "(" << car->print() << " " << cdr->print() << ")";
