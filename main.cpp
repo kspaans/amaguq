@@ -28,7 +28,10 @@ int main(void)
 	while (1) {
 		std::cout << "> ";
 		line = read();
-		if (std::cin.eof()) break;
+		if (std::cin.eof()) {
+			std::cout << std::endl;
+			break;
+		}
 		try {
 			at = a.eval(line);
 		} catch (std::exception& e) {

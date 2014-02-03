@@ -28,7 +28,8 @@ atom* char_helper(const std::string& s, unsigned& idx)
 	} else if ('\n' == s[idx + 2]) {
 		c = new charlit("#\\newline");
 	} else {
-		c = new charlit(s);
+		std::string blah(s.c_str() + idx, s.c_str() + s.length());
+		c = new charlit(blah);
 	}
 	idx += 3;
 
@@ -40,6 +41,7 @@ atom* str_helper(const std::string& s, unsigned& idx)
 	strlit* str;
 	unsigned sstate = 0x0;
 	unsigned length = s.length();
+	unsigned init = idx;
 
 	for (; idx != length; ++idx) {
 		if (0x0 == sstate) {
@@ -68,7 +70,7 @@ atom* str_helper(const std::string& s, unsigned& idx)
 		return nullptr;
 	}
 
-	str = new strlit(s);
+	str = new strlit(s.c_str() + init);
 
 	return str;
 }
