@@ -18,7 +18,11 @@ std::string list::print()
 {
 	std::stringstream s;
 
-	s << "(" << car->print() << " " << cdr->print() << ")";
+	if (nullptr == car && nullptr == cdr) {
+		s << "()";
+	} else {
+		s << "(" << car->print() << " " << cdr->print() << ")";
+	}
 
 	return s.str();
 }
