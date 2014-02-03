@@ -390,6 +390,7 @@ TEST_F(quote_test, quote_tick)
 	std::string s = "'a";
 
 	t = a.eval(s);
+	t = t->eval();
 	EXPECT_EQ("a", t->print());
 }
 
@@ -398,5 +399,33 @@ TEST_F(quote_test, quote_fixnum)
 	std::string s = "'1";
 
 	t = a.eval(s);
+	t = t->eval();
 	EXPECT_EQ("1", t->print());
+}
+
+TEST_F(quote_test, quote_bool)
+{
+	std::string s = "'#f";
+
+	t = a.eval(s);
+	t = t->eval();
+	EXPECT_EQ("#f", t->print());
+}
+
+TEST_F(quote_test, quote_char)
+{
+	std::string s = "'#\\^";
+
+	t = a.eval(s);
+	t = t->eval();
+	EXPECT_EQ("#\\^", t->print());
+}
+
+TEST_F(quote_test, quote_string)
+{
+	std::string s = "'\"alpha to omega\"";
+
+	t = a.eval(s);
+	t = t->eval();
+	EXPECT_EQ("\"alpha to omega\"", t->print());
 }

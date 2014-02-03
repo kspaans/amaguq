@@ -107,6 +107,7 @@ symbol* symbol_helper(const std::string& s, unsigned& idx)
 	const unsigned init = idx;
 	const unsigned length = s.length();
 
+	// TODO symbols can be more than alphanumerics
 	while (isalnum(s[idx]) && idx <= length) {
 		idx += 1;
 	}
@@ -160,7 +161,8 @@ atom* amaguq::read(const std::string& s, unsigned& idx)
 	} else if (('\'' == s[idx])) {
 		a = read(s, ++idx);
 		// TODO should the intermediate stuff be added to the heap?
-		a = eval_quote(a);
+		a = new quote(a);
+		hp.alloc(a);
 	} else {
 		a = fixnum_helper(s, idx);
 		hp.alloc(a);

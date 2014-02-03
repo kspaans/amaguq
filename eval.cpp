@@ -13,6 +13,10 @@ atom* eval_quote(atom* a)
 		return a;
 	} else if (BOOLEAN == a->atype) {
 		return a;
+	} else if (CHARLIT == a->atype) {
+		return a;
+	} else if (STRLIT == a->atype) {
+		return a;
 	} else {
 		throw std::logic_error("Cannot quote this type");
 	}
