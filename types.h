@@ -1,6 +1,8 @@
 #ifndef __TYPES_H__
 #define __TYPES_H__
 
+struct amaguq;
+
 enum a_type {
 	ATOM,
 	FIXNUM,
@@ -18,6 +20,7 @@ struct atom {
 	virtual std::string print();
 	virtual atom* eval();
 
+	amaguq* interpreter;
 	a_type atype;
 };
 

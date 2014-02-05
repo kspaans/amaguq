@@ -1,7 +1,6 @@
 #include <iostream>
 #include <string>
 #include "amaguq.h"
-#include "eval.h"
 
 amaguq::amaguq()
 {
@@ -13,6 +12,8 @@ amaguq::amaguq()
 	hp.alloc(a);
 	a = new list(nullptr, nullptr); // "empty list"
 	hp.alloc(a);
+
+	env.parent = nullptr;
 }
 
 amaguq::~amaguq()
@@ -176,6 +177,9 @@ atom* amaguq::read(const std::string& s, unsigned& idx)
 atom* amaguq::eval(const std::string& s)
 {
 	unsigned idx = 0;
+	atom* a;
 
-	return read(s, idx);
+	a = read(s, idx);
+	a->interpreter = this;
+	return a;
 }

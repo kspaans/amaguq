@@ -1,7 +1,6 @@
 #include <sstream>
 #include <stdexcept>
 #include "amaguq.h"
-#include "eval.h"
 
 list::list(atom* t, atom *tt)
 {
@@ -34,7 +33,7 @@ atom* list::eval()
 		throw std::logic_error("Cannot evaluate empty list");
 	}
 	if (SYMBOL == car->atype) {
-		return eval_symbol(this);
+		return interpreter->eval_symbol(this);
 	} else {
 		throw std::logic_error("Cannot evaluate list");
 	}

@@ -36,7 +36,11 @@ struct amaguq {
 	atom* eval(const std::string&);
 	atom* read(const std::string&, unsigned&);
 	atom* eval_pair(const std::string&, unsigned&);
+	atom* eval_symbol(list* a);
+	atom* eval_quote(atom* a);
+	symbol* eval_define(atom* a);
 
+	// TODO change member variables to start with _
 	heap hp;
 	environment env;
 };

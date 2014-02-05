@@ -1,5 +1,5 @@
 CXX=clang++
-CXXFLAGS=-O -MMD -std=c++11 #-fsanitize=address
+CXXFLAGS=-O0 -MMD -std=c++11 #-fsanitize=address
 
 
 GTEST_DIR = /usr/src/gtest

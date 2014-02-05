@@ -2,11 +2,12 @@
 #include <sstream>
 #include <stdexcept>
 #include "amaguq.h"
-#include "eval.h"
 
+#include <iostream>
 const std::string KEYWORD_QUOTE("quote");
+const std::string KEYWORD_DEFINE("define");
 
-atom* eval_quote(atom* a)
+atom* amaguq::eval_quote(atom* a)
 {
 	if (SYMBOL == a->atype) {
 		return a;
@@ -25,13 +26,36 @@ atom* eval_quote(atom* a)
 	return a;
 }
 
-atom* eval_symbol(list* l)
+symbol* amaguq::eval_define(atom* a)
+{
+	list* l;
+	symbol* s;
+	if (LIST == a->atype) {
+		l = static_cast<list*>(a);
+	} else {
+		throw std::logic_error("define with no list");
+	}
+	if (SYMBOL == l->cdr->atype) {
+		s = static_cast<symbol*>(l->cdr);
+	} else {
+		throw std::logic_error("define with no symbol");
+	}
+
+	env.symbol_table.insert(std::make_pair("a", new fixnum("9")));
+
+	// TODO memory leak
+	return new symbol("OK");
+}
+
+atom* amaguq::eval_symbol(list* l)
 {
 	symbol* s = static_cast<symbol*>(l->car);
 
 	if (s->sym == KEYWORD_QUOTE) {
 		// TODO destroy the parent list?
 		return eval_quote(l->cdr);
+	} else if (s->sym == KEYWORD_DEFINE) {
+		return eval_define(l);
 	} else {
 		std::stringstream err;
 		err << "Unknown symbol: " << s->sym;
@@ -40,9 +64,3 @@ atom* eval_symbol(list* l)
 
 	return s;
 }
-
-/*
- * Temporary name of an eval function that takes symols and returns symbols
- * performing syntactic and semantic evaluation.
- */
-atom* actual_eval();
