@@ -35,13 +35,17 @@ symbol* amaguq::eval_define(atom* a)
 	} else {
 		throw std::logic_error("define with no list");
 	}
-	if (SYMBOL == l->cdr->atype) {
-		s = static_cast<symbol*>(l->cdr);
+	if (LIST == l->cdr->atype) {
+		l = static_cast<list*>(l->cdr);
+		if (SYMBOL != l->car->atype) {
+			throw std::logic_error("define with no symbol");
+		}
 	} else {
-		throw std::logic_error("define with no symbol");
+		throw std::logic_error("improper argument to define");
 	}
 
-	env.symbol_table.insert(std::make_pair("a", new fixnum("9")));
+	s = static_cast<symbol*>(l->car);
+	env.symbol_table.insert(std::make_pair(s->sym, l->cdr));
 
 	// TODO memory leak
 	return new symbol("OK");
