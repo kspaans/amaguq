@@ -438,8 +438,19 @@ TEST_F(env_test, define0)
 {
 	std::string s = "(define a 0)";
 	fixnum* i;
+	list* l;
 
 	t = a.eval(s);
+	EXPECT_EQ(t->atype, LIST);
+	l = static_cast<list*>(t);
+	EXPECT_EQ(l->car->atype, SYMBOL);
+	EXPECT_EQ(l->cdr->atype, LIST);
+	l = static_cast<list*>(l->cdr);
+	EXPECT_EQ(l->car->atype, SYMBOL);
+	EXPECT_EQ(l->cdr->atype, LIST);
+	l = static_cast<list*>(l->cdr);
+	EXPECT_EQ(l->car->atype, FIXNUM);
+	EXPECT_EQ(l->cdr->atype, LIST);
 	t = t->eval(); // returns 'ok, but we don't actually care
 
 	it = a.env.symbol_table.find("a");

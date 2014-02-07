@@ -18,6 +18,12 @@ std::string symbol::print()
 
 atom* symbol::eval()
 {
-	// TODO look up the symbol in the environment
-	throw std::logic_error("Symbol not found in environment");
+	table::iterator it;
+
+	it = interpreter->env.symbol_table.find(sym);
+	if (interpreter->env.symbol_table.end() == it ) {
+		throw std::logic_error("Symbol not found in environment");
+	}
+
+	return it->second;
 }

@@ -76,17 +76,38 @@ atom* str_helper(const std::string& s, unsigned& idx)
 	return str;
 }
 
+void gobble_whitespace(const std::string& s, unsigned& idx)
+{
+	while (s[idx] == ' ' || s[idx] == '\t') {
+		idx += 1;
+	}
+}
+
 atom* amaguq::eval_pair(const std::string& s, unsigned& idx)
 {
 	list* l;
+	list* inner;
 	atom* car;
 	atom* cdr;
-
+	atom* a;
+	atom* rest;
 
 	car = read(s, idx);
-	cdr = read(s, idx);
-	
-	l = new list(car, cdr);
+	gobble_whitespace(s, idx);
+	if (s[idx] == ')') {
+		cdr = hp.h[2]; // empty list
+	} else {
+		cdr = read(s, idx);
+	}
+	gobble_whitespace(s, idx);
+	if (s[idx] == ')') {
+		l = new list(car, cdr);
+	} else {
+		inner = new list(cdr, nullptr);
+		cdr = eval_pair(s, idx);
+		inner->cdr = cdr;
+		l = new list(car, inner);
+	}
 
 	return l;
 }
@@ -118,13 +139,6 @@ symbol* symbol_helper(const std::string& s, unsigned& idx)
 	std::string blah(s.c_str() + init, s.c_str() + idx);
 
 	return new symbol(blah);
-}
-
-void gobble_whitespace(const std::string& s, unsigned& idx)
-{
-	while (s[idx] == ' ' || s[idx] == '\t') {
-		idx += 1;
-	}
 }
 
 atom* amaguq::read(const std::string& s, unsigned& idx)
