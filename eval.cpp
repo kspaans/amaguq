@@ -29,6 +29,7 @@ atom* amaguq::eval_quote(atom* a)
 symbol* amaguq::eval_define(atom* a)
 {
 	list* l;
+	list* expr;
 	symbol* s;
 	if (LIST == a->atype) {
 		l = static_cast<list*>(a);
@@ -36,16 +37,22 @@ symbol* amaguq::eval_define(atom* a)
 		throw std::logic_error("define with no list");
 	}
 	if (LIST == l->cdr->atype) {
-		l = static_cast<list*>(l->cdr);
-		if (SYMBOL != l->car->atype) {
+		expr = static_cast<list*>(l->cdr);
+		if (SYMBOL != expr->car->atype) {
 			throw std::logic_error("define with no symbol");
 		}
 	} else {
 		throw std::logic_error("improper argument to define");
 	}
-
-	s = static_cast<symbol*>(l->car);
-	env.symbol_table.insert(std::make_pair(s->sym, l->cdr));
+	if (LIST != expr->cdr->atype) {
+		throw std::logic_error("improper expression in define");
+	}
+	s = static_cast<symbol*>(expr->car);
+	expr = static_cast<list*>(expr->cdr);
+	if (expr->cdr != hp.h[2]) { // empty list
+		throw std::logic_error("extra arguments in expression");
+	}
+	env.symbol_table.insert(std::make_pair(s->sym, expr->car->eval()));
 
 	// TODO memory leak
 	return new symbol("OK");
