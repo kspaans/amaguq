@@ -83,28 +83,26 @@ void gobble_whitespace(const std::string& s, unsigned& idx)
 	}
 }
 
-atom* amaguq::eval_pair(const std::string& s, unsigned& idx)
+atom* amaguq::read_pair(const std::string& s, unsigned& idx)
 {
 	list* l;
 	list* inner;
 	atom* car;
 	atom* cdr;
-	atom* a;
-	atom* rest;
 
-	car = read(s, idx);
+	car = reads(s, idx);
 	gobble_whitespace(s, idx);
 	if (s[idx] == ')') {
 		cdr = hp.h[2]; // empty list
 	} else {
-		cdr = read(s, idx);
+		cdr = reads(s, idx);
 	}
 	gobble_whitespace(s, idx);
 	if (s[idx] == ')') {
 		l = new list(car, cdr);
 	} else {
 		inner = new list(cdr, nullptr);
-		cdr = eval_pair(s, idx);
+		cdr = read_pair(s, idx);
 		inner->cdr = cdr;
 		l = new list(car, inner);
 	}
@@ -141,7 +139,7 @@ symbol* symbol_helper(const std::string& s, unsigned& idx)
 	return new symbol(blah);
 }
 
-atom* amaguq::read(const std::string& s, unsigned& idx)
+atom* amaguq::reads(const std::string& s, unsigned& idx)
 {
 	atom *a = nullptr;
 
@@ -165,18 +163,18 @@ atom* amaguq::read(const std::string& s, unsigned& idx)
 			idx += 2;
 			a = hp.h[2]; // empty list
 		} else {
-			a = eval_pair(s, ++idx);
+			a = read_pair(s, ++idx);
 			hp.alloc(a);
 		}
 	} else if ('.' == s[idx]) {
 		// list special? FIXME
-		a = read(s, ++idx);
+		a = reads(s, ++idx);
 	} else if ((s[idx] >= 'a' && s[idx] <= 'z')
 			|| (s[idx] >= 'A' && s[idx] <= 'Z')) {
 		a = symbol_helper(s, idx);
 		hp.alloc(a);
 	} else if (('\'' == s[idx])) {
-		a = read(s, ++idx);
+		a = reads(s, ++idx);
 		// TODO should the intermediate stuff be added to the heap?
 		a = new quote(a);
 		hp.alloc(a);
@@ -188,12 +186,12 @@ atom* amaguq::read(const std::string& s, unsigned& idx)
 	return a;
 }
 
-atom* amaguq::eval(const std::string& s)
+atom* amaguq::read(const std::string& s)
 {
 	unsigned idx = 0;
 	atom* a;
 
-	a = read(s, idx);
+	a = reads(s, idx);
 	a->interpreter = this;
 	return a;
 }

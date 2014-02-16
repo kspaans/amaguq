@@ -32,10 +32,9 @@ struct amaguq {
 	amaguq();
 	~amaguq();
 
-	// TODO change this to 'read' or similar
-	atom* eval(const std::string&);
-	atom* read(const std::string&, unsigned&);
-	atom* eval_pair(const std::string&, unsigned&);
+	atom* read(const std::string&);
+	atom* reads(const std::string&, unsigned&);
+	atom* read_pair(const std::string&, unsigned&);
 	atom* eval_symbol(list* a);
 	atom* eval_quote(atom* a);
 	symbol* eval_define(atom* a);

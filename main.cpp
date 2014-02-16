@@ -33,7 +33,7 @@ int main(void)
 			break;
 		}
 		try {
-			at = a.eval(line);
+			at = a.read(line);
 		} catch (std::exception& e) {
 			std::cout << "Error: " << e.what() << std::endl;
 			continue;

@@ -60,7 +60,7 @@ TEST_F(ints_test, integers0)
 {
 	std::string s = "123";
 
-	t = a.eval(s);
+	t = a.read(s);
 	i = static_cast<fixnum*>(t);
 	EXPECT_NE(nullptr, i);
 	EXPECT_EQ(FIXNUM, i->atype);
@@ -71,7 +71,7 @@ TEST_F(ints_test, ints_self_eval)
 {
 	std::string s = "74621";
 
-	t = a.eval(s);
+	t = a.read(s);
 	a2 = t->eval();
 	EXPECT_EQ(a2, t);
 	EXPECT_EQ("74621", a2->print());
@@ -81,7 +81,7 @@ TEST_F(ints_test, integers1)
 {
 	std::string s = "-123";
 
-	t = a.eval(s);
+	t = a.read(s);
 	i = static_cast<fixnum*>(t);
 	EXPECT_NE(nullptr, i);
 	EXPECT_EQ(-123, i->value);
@@ -91,7 +91,7 @@ TEST_F(ints_test, integers2)
 {
 	std::string s = "007";
 
-	t = a.eval(s);
+	t = a.read(s);
 	i = static_cast<fixnum*>(t);
 	EXPECT_NE(nullptr, i);
 	EXPECT_EQ(7, i->value);
@@ -101,7 +101,7 @@ TEST_F(bools_test, booleans0)
 {
 	std::string s = "#t";
 
-	t = a.eval(s);
+	t = a.read(s);
 	b = static_cast<boolean*>(t);
 	EXPECT_NE(nullptr, b);
 }
@@ -110,7 +110,7 @@ TEST_F(bools_test, bools_self_eval)
 {
 	std::string s = "#t";
 
-	t = a.eval(s);
+	t = a.read(s);
 	a2 = t->eval();
 	EXPECT_EQ(a2, t);
 	EXPECT_EQ("#t", a2->print());
@@ -120,7 +120,7 @@ TEST_F(bools_test, booleans1)
 {
 	std::string s = "#f";
 
-	t = a.eval(s);
+	t = a.read(s);
 	b = static_cast<boolean*>(t);
 	EXPECT_NE(nullptr, b);
 }
@@ -133,10 +133,10 @@ TEST_F(bools_test, booleans_singletons)
 	atom* t3;
 	atom* t4;
 
-	t = a.eval(tr);
-	t2 = a.eval(tr);
-	t3 = a.eval(f);
-	t4 = a.eval(f);
+	t = a.read(tr);
+	t2 = a.read(tr);
+	t3 = a.read(f);
+	t4 = a.read(f);
 	EXPECT_EQ(t, t2);
 	EXPECT_EQ(t3, t4);
 }
@@ -145,7 +145,7 @@ TEST_F(chars_test, chars0)
 {
 	std::string s = "#\\a";
 
-	t = a.eval(s);
+	t = a.read(s);
 	c = static_cast<charlit*>(t);
 	EXPECT_NE(nullptr, c);
 	EXPECT_EQ(s, c->str);
@@ -155,7 +155,7 @@ TEST_F(chars_test, chars_self_eval)
 {
 	std::string s = "#\\C";
 
-	t = a.eval(s);
+	t = a.read(s);
 	a2 = t->eval();
 	EXPECT_EQ(a2, t);
 	EXPECT_EQ("#\\C", a2->print());
@@ -165,7 +165,7 @@ TEST_F(chars_test, chars1)
 {
 	std::string s = "#\\ ";
 
-	t = a.eval(s);
+	t = a.read(s);
 	c = static_cast<charlit*>(t);
 	EXPECT_NE(nullptr, c);
 	EXPECT_EQ("#\\space", c->str);
@@ -175,7 +175,7 @@ TEST_F(chars_test, chars2)
 {
 	std::string s = "#\\\n";
 
-	t = a.eval(s);
+	t = a.read(s);
 	c = static_cast<charlit*>(t);
 	EXPECT_NE(nullptr, c);
 	EXPECT_EQ("#\\newline", c->str);
@@ -185,7 +185,7 @@ TEST_F(strings_test, str0)
 {
 	std::string str = "\"asdf\"";
 
-	t = a.eval(str);
+	t = a.read(str);
 	s = static_cast<strlit*>(t);
 	EXPECT_NE(nullptr, s);
 	EXPECT_EQ(str, s->str);
@@ -195,7 +195,7 @@ TEST_F(strings_test, strings_self_eval)
 {
 	std::string s = "\"elyK\"";
 
-	t = a.eval(s);
+	t = a.read(s);
 	a2 = t->eval();
 	EXPECT_EQ(a2, t);
 	EXPECT_EQ("\"elyK\"", a2->print());
@@ -205,7 +205,7 @@ TEST_F(strings_test, str1)
 {
 	std::string str = "\"asdf\\\"asdf\"";
 
-	t = a.eval(str);
+	t = a.read(str);
 	s = static_cast<strlit*>(t);
 	EXPECT_NE(nullptr, s);
 	EXPECT_EQ(str, s->str);
@@ -215,7 +215,7 @@ TEST_F(strings_test, str2)
 {
 	std::string str = "\"asdf\\n\"";
 
-	t = a.eval(str);
+	t = a.read(str);
 	s = static_cast<strlit*>(t);
 	EXPECT_NE(nullptr, s);
 	EXPECT_EQ(str, s->str);
@@ -225,7 +225,7 @@ TEST_F(lists_test, list0)
 {
 	std::string s = "()";
 
-	t = a.eval(s);
+	t = a.read(s);
 	l = static_cast<list*>(t);
 	EXPECT_NE(nullptr, l);
 	EXPECT_EQ(a.hp.h[2], l);
@@ -235,7 +235,7 @@ TEST_F(lists_test, list_empty_doesnt_self_eval)
 {
 	std::string s = "()";
 
-	t = a.eval(s);
+	t = a.read(s);
 	// TODO not use exceptions for program errors
 	EXPECT_THROW(a2 = t->eval(), std::logic_error);
 }
@@ -244,7 +244,7 @@ TEST_F(lists_test, lists_dont_self_eval)
 {
 	std::string s = "(55 ())";
 
-	t = a.eval(s);
+	t = a.read(s);
 	// TODO not use exceptions for program errors
 	EXPECT_THROW(a2 = t->eval(), std::logic_error);
 }
@@ -255,7 +255,7 @@ TEST_F(lists_test, list1)
 	fixnum* i1;
 	fixnum* i2;
 
-	t = a.eval(s);
+	t = a.read(s);
 	l = static_cast<list*>(t);
 	EXPECT_NE(nullptr, l);
 	i1 = static_cast<fixnum*>(l->car);
@@ -270,7 +270,7 @@ TEST_F(lists_test, listints)
 	fixnum* i1;
 	fixnum* i2;
 
-	t = a.eval(s);
+	t = a.read(s);
 	l = static_cast<list*>(t);
 	EXPECT_NE(nullptr, l);
 	i1 = static_cast<fixnum*>(l->car);
@@ -285,7 +285,7 @@ TEST_F(lists_test, listchars)
 	charlit* c1;
 	charlit* c2;
 
-	t = a.eval(s);
+	t = a.read(s);
 	l = static_cast<list*>(t);
 	EXPECT_NE(nullptr, l);
 	c1 = static_cast<charlit*>(l->car);
@@ -300,7 +300,7 @@ TEST_F(lists_test, list0empty)
 	fixnum* i1;
 	list* l2;
 
-	t = a.eval(s);
+	t = a.read(s);
 	EXPECT_EQ(LIST, t->atype);
 	l = static_cast<list*>(t);
 	EXPECT_NE(nullptr, l);
@@ -320,7 +320,7 @@ TEST_F(lists_test, list0empty2)
 	fixnum* i1;
 	list* l2;
 
-	t = a.eval(s);
+	t = a.read(s);
 	EXPECT_EQ(LIST, t->atype);
 	l = static_cast<list*>(t);
 	EXPECT_NE(nullptr, l);
@@ -340,7 +340,7 @@ TEST_F(lists_test, list123)
 	fixnum* i;
 	list *l2;
 
-	t = a.eval(s);
+	t = a.read(s);
 	EXPECT_EQ(LIST, t->atype);
 	l = static_cast<list*>(t);
 	EXPECT_NE(nullptr, l);
@@ -364,7 +364,7 @@ TEST_F(symbols_test, symbolasdf)
 {
 	std::string s = "asdf";
 
-	t = a.eval(s);
+	t = a.read(s);
 	EXPECT_EQ(SYMBOL, t->atype);
 	sy = static_cast<symbol*>(t);
 	EXPECT_NE(nullptr, sy);
@@ -376,7 +376,7 @@ TEST_F(symbols_test, symbol_not_self_eval)
 {
 	std::string s = "asymbol";
 
-	t = a.eval(s);
+	t = a.read(s);
 	EXPECT_THROW(a2 = t->eval(), std::logic_error);
 }
 
@@ -384,7 +384,7 @@ TEST_F(quote_test, quote_sym)
 {
 	std::string s = "(quote a)";
 
-	t = a.eval(s);
+	t = a.read(s);
 	t = t->eval();
 	EXPECT_EQ("a", t->print());
 }
@@ -393,7 +393,7 @@ TEST_F(quote_test, quote_tick)
 {
 	std::string s = "'a";
 
-	t = a.eval(s);
+	t = a.read(s);
 	t = t->eval();
 	EXPECT_EQ("a", t->print());
 }
@@ -402,7 +402,7 @@ TEST_F(quote_test, quote_fixnum)
 {
 	std::string s = "'1";
 
-	t = a.eval(s);
+	t = a.read(s);
 	t = t->eval();
 	EXPECT_EQ("1", t->print());
 }
@@ -411,7 +411,7 @@ TEST_F(quote_test, quote_bool)
 {
 	std::string s = "'#f";
 
-	t = a.eval(s);
+	t = a.read(s);
 	t = t->eval();
 	EXPECT_EQ("#f", t->print());
 }
@@ -420,7 +420,7 @@ TEST_F(quote_test, quote_char)
 {
 	std::string s = "'#\\^";
 
-	t = a.eval(s);
+	t = a.read(s);
 	t = t->eval();
 	EXPECT_EQ("#\\^", t->print());
 }
@@ -429,7 +429,7 @@ TEST_F(quote_test, quote_string)
 {
 	std::string s = "'\"alpha to omega\"";
 
-	t = a.eval(s);
+	t = a.read(s);
 	t = t->eval();
 	EXPECT_EQ("\"alpha to omega\"", t->print());
 }
@@ -440,7 +440,7 @@ TEST_F(env_test, define0)
 	fixnum* i;
 	list* l;
 
-	t = a.eval(s);
+	t = a.read(s);
 	EXPECT_EQ(t->atype, LIST);
 	l = static_cast<list*>(t);
 	EXPECT_EQ(l->car->atype, SYMBOL);
