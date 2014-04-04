@@ -34,11 +34,11 @@ int main(void)
 		}
 		try {
 			at = a.read(line);
+			print(at->eval());
 		} catch (std::exception& e) {
 			std::cout << "Error: " << e.what() << std::endl;
 			continue;
 		}
-		print(at->eval());
 		// LOOP!
 	}
 
