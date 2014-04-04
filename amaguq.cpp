@@ -86,26 +86,33 @@ void gobble_whitespace(const std::string& s, unsigned& idx)
 atom* amaguq::read_pair(const std::string& s, unsigned& idx)
 {
 	list* l;
-	list* inner;
 	atom* car;
 	atom* cdr;
 
+	if (s[idx] == ')') {
+		++idx;
+		return hp.h[2]; // empty list
+	}
 	car = reads(s, idx);
 	gobble_whitespace(s, idx);
-	if (s[idx] == ')') {
-		cdr = hp.h[2]; // empty list
+
+	if (s[idx] == '.') {
+		++idx;
+		cdr = reads(s, idx);
+		gobble_whitespace(s, idx);
+		if (s[idx] != ')') {
+		// expect ')' else throw excptn TODO
+		}
+		++idx;
 	} else {
 		cdr = reads(s, idx);
+		cdr = new list(cdr, read_pair(s, idx));
+		if (s[idx] == ')') {
+			// what to do "for '(1 2 3)"
+		}
 	}
-	gobble_whitespace(s, idx);
-	if (s[idx] == ')') {
-		l = new list(car, cdr);
-	} else {
-		inner = new list(cdr, nullptr);
-		cdr = read_pair(s, idx);
-		inner->cdr = cdr;
-		l = new list(car, inner);
-	}
+	l = new list(car, cdr);
+	hp.alloc(l);
 
 	return l;
 }
@@ -159,16 +166,10 @@ atom* amaguq::reads(const std::string& s, unsigned& idx)
 		a = str_helper(s, idx);
 		hp.alloc(a);
 	} else if ('(' == s[idx]) {
-		if (')' == s[idx + 1]) {
-			idx += 2;
-			a = hp.h[2]; // empty list
-		} else {
-			a = read_pair(s, ++idx);
-			hp.alloc(a);
-		}
-	} else if ('.' == s[idx]) {
-		// list special? FIXME
-		a = reads(s, ++idx);
+		a = read_pair(s, ++idx);
+//	} else if ('.' == s[idx]) {
+//		// list special? FIXME
+//		a = reads(s, ++idx);
 	} else if ((s[idx] >= 'a' && s[idx] <= 'z')
 			|| (s[idx] >= 'A' && s[idx] <= 'Z')) {
 		a = symbol_helper(s, idx);
