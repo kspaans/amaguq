@@ -459,3 +459,32 @@ TEST_F(env_test, define0)
 	i = static_cast<fixnum*>(it->second);
 	EXPECT_EQ(i->value, 0);
 }
+
+#if 0
+TEST_F(env_test, define_rewrite_is_ok)
+{
+	std::string s =  "(define a 0)";
+	std::string s2 = "(define a 2)";
+	fixnum* i;
+	list* l;
+
+	t = a.read(s);
+	EXPECT_EQ(t->atype, LIST);
+	l = static_cast<list*>(t);
+	EXPECT_EQ(l->car->atype, SYMBOL);
+	EXPECT_EQ(l->cdr->atype, LIST);
+	l = static_cast<list*>(l->cdr);
+	EXPECT_EQ(l->car->atype, SYMBOL);
+	EXPECT_EQ(l->cdr->atype, LIST);
+	l = static_cast<list*>(l->cdr);
+	EXPECT_EQ(l->car->atype, FIXNUM);
+	EXPECT_EQ(l->cdr->atype, LIST);
+	t = t->eval(); // returns 'ok, but we don't actually care
+
+	it = a.env.symbol_table.find("a");
+	EXPECT_NE(a.env.symbol_table.end(), it);
+	EXPECT_EQ(it->second->atype, FIXNUM);
+	i = static_cast<fixnum*>(it->second);
+	EXPECT_EQ(i->value, 0);
+}
+#endif
