@@ -105,12 +105,9 @@ atom* amaguq::read_pair(const std::string& s, unsigned& idx)
 		}
 		++idx;
 	} else {
-		cdr = reads(s, idx);
-		cdr = new list(cdr, read_pair(s, idx));
-		if (s[idx] == ')') {
-			// what to do "for '(1 2 3)"
-		}
+		cdr = read_pair(s, idx);
 	}
+
 	l = new list(car, cdr);
 	hp.alloc(l);
 
