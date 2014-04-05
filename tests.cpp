@@ -330,7 +330,8 @@ TEST_F(lists_test, list0empty2)
 	l2 = static_cast<list*>(l->cdr);
 	EXPECT_EQ(FIXNUM, i1->atype);
 	EXPECT_EQ(0, i1->value);
-	EXPECT_EQ(LIST, l2->atype);
+	EXPECT_EQ(LIST, l2->car->atype);
+	l2 = static_cast<list*>(l2->car);
 	EXPECT_EQ(a.hp.h[2], l2);
 }
 
