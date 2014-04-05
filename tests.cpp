@@ -381,14 +381,18 @@ TEST_F(symbols_test, symbol_not_self_eval)
 	EXPECT_THROW(a2 = t->eval(), std::logic_error);
 }
 
+#if 0
 TEST_F(quote_test, quote_sym)
 {
+	// TODO how to handle this when the argument to quote is a list of length 1?
+	// TODO is it different from quoting a list?
 	std::string s = "(quote a)";
 
 	t = a.read(s);
 	t = t->eval();
 	EXPECT_EQ("a", t->print());
 }
+#endif
 
 TEST_F(quote_test, quote_tick)
 {
