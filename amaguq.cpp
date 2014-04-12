@@ -164,9 +164,6 @@ atom* amaguq::reads(const std::string& s, unsigned& idx)
 		hp.alloc(a);
 	} else if ('(' == s[idx]) {
 		a = read_pair(s, ++idx);
-//	} else if ('.' == s[idx]) {
-//		// list special? FIXME
-//		a = reads(s, ++idx);
 	} else if ((s[idx] >= 'a' && s[idx] <= 'z')
 			|| (s[idx] >= 'A' && s[idx] <= 'Z')) {
 		a = symbol_helper(s, idx);
