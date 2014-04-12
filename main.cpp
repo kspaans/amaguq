@@ -42,5 +42,14 @@ int main(void)
 		// LOOP!
 	}
 
+	std::cout << "Allocations: " << a.hp.allocs << std::endl;
+	std::vector<atom*>::iterator it;
+
+	for (it = a.hp.h.begin(); it != a.hp.h.end(); ++it) {
+		std::cout << *it << " " <<
+			(*it)->atype << std::endl;
+		// TODO print more complete info: stringify the type, value, etc
+	}
+
 	return 0;
 }

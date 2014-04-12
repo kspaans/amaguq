@@ -52,6 +52,7 @@ symbol* amaguq::eval_define(atom* a)
 	if (expr->cdr != hp.h[2]) { // empty list
 		throw std::logic_error("extra arguments in expression");
 	}
+        // TODO I thought inserting would overwrite, if not this needs to change
 	env.symbol_table.insert(std::make_pair(s->sym, expr->car->eval()));
 
 	// TODO memory leak

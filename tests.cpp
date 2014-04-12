@@ -465,31 +465,45 @@ TEST_F(env_test, define0)
 	EXPECT_EQ(i->value, 0);
 }
 
-#if 0
 TEST_F(env_test, define_rewrite_is_ok)
 {
 	std::string s =  "(define a 0)";
 	std::string s2 = "(define a 2)";
 	fixnum* i;
-	list* l;
 
 	t = a.read(s);
-	EXPECT_EQ(t->atype, LIST);
-	l = static_cast<list*>(t);
-	EXPECT_EQ(l->car->atype, SYMBOL);
-	EXPECT_EQ(l->cdr->atype, LIST);
-	l = static_cast<list*>(l->cdr);
-	EXPECT_EQ(l->car->atype, SYMBOL);
-	EXPECT_EQ(l->cdr->atype, LIST);
-	l = static_cast<list*>(l->cdr);
-	EXPECT_EQ(l->car->atype, FIXNUM);
-	EXPECT_EQ(l->cdr->atype, LIST);
 	t = t->eval(); // returns 'ok, but we don't actually care
+        t = a.read(s);
+        t = t->eval();
 
 	it = a.env.symbol_table.find("a");
 	EXPECT_NE(a.env.symbol_table.end(), it);
 	EXPECT_EQ(it->second->atype, FIXNUM);
 	i = static_cast<fixnum*>(it->second);
-	EXPECT_EQ(i->value, 0);
+	EXPECT_EQ(i->value, 2);
 }
+
+#if 0 // TODO
+TEST_F(env_test, setbang_success)
+{
+	std::string s =   "(define a 0)";
+	std::string s2 =  "(set! a 1)";
+TEST_F(env_test, setbang_failure)
+{
+	std::string s =  "(set! a 0)";
+TEST_F(if_test, 2part_ift)
+{
+	std::string s =  "(if #t 1 2)";
+TEST_F(if_test, 2part_iff)
+{
+	std::string s =  "(if #f 1 2)";
+TEST_F(if_test, 1part_ift)
+{
+	std::string s =  "(if #t 1)";
+TEST_F(if_test, 1part_iff)
+{
+	std::string s =  "(if #f 1)"; => #f
+TEST_F(if_test, anything _is_true)
+{
+	std::string s =  "(if 0 1 2)"; => 1
 #endif
