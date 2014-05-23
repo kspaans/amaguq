@@ -56,6 +56,12 @@ struct env_test : testing::Test {
 	table::iterator it;
 };
 
+struct if_test : testing::Test {
+	amaguq a;
+	atom *t;
+	table::iterator it;
+};
+
 TEST_F(ints_test, integers0)
 {
 	std::string s = "123";
@@ -512,10 +518,20 @@ TEST_F(env_test, setbang_failure)
 	EXPECT_THROW(t = t->eval(), std::logic_error);
 }
 
-#if 0 // TODO
 TEST_F(if_test, 2part_ift)
 {
 	std::string s =  "(if #t 1 2)";
+	fixnum* i;
+
+	t = a.read(s);
+	t = t->eval();
+
+	EXPECT_EQ(FIXNUM, t->atype);
+	i = static_cast<fixnum*>(t);
+	EXPECT_EQ(1, i->value);
+}
+
+#if 0 // TODO
 TEST_F(if_test, 2part_iff)
 {
 	std::string s =  "(if #f 1 2)";
