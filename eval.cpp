@@ -6,6 +6,7 @@
 #include <iostream>
 const std::string KEYWORD_QUOTE("quote");
 const std::string KEYWORD_DEFINE("define");
+const std::string KEYWORD_SETBANG("set!");
 
 atom* amaguq::eval_quote(atom* a)
 {
@@ -69,6 +70,48 @@ symbol* amaguq::eval_define(atom* a)
 	return new symbol("OK");
 }
 
+symbol* amaguq::eval_setbang(atom* a)
+{
+	list* l;
+	list* expr;
+	symbol* s;
+	table::iterator it;
+
+	if (LIST == a->atype) {
+		l = static_cast<list*>(a);
+	} else {
+		throw std::logic_error("set! with no list");
+	}
+	if (LIST == l->cdr->atype) {
+		expr = static_cast<list*>(l->cdr);
+		if (SYMBOL != expr->car->atype) {
+			throw std::logic_error("set! with no symbol");
+		}
+	} else {
+		throw std::logic_error("improper argument to set!");
+	}
+	if (LIST != expr->cdr->atype) {
+		throw std::logic_error("improper expression in set!");
+	}
+	s = static_cast<symbol*>(expr->car);
+	expr = static_cast<list*>(expr->cdr);
+	if (expr->cdr != hp.h[2]) { // empty list
+		throw std::logic_error("extra arguments in expression");
+	}
+
+	it = env.symbol_table.find(s->sym);
+	if (env.symbol_table.end() == it) {
+		throw std::logic_error("symbol not defined");
+	} else {
+		env.symbol_table.erase(it);
+		env.symbol_table.insert(
+			std::make_pair(s->sym, expr->car->eval())
+		);
+	}
+
+	return new symbol("OK");
+}
+
 atom* amaguq::eval_symbol(list* l)
 {
 	symbol* s = static_cast<symbol*>(l->car);
@@ -78,6 +121,8 @@ atom* amaguq::eval_symbol(list* l)
 		return eval_quote(l->cdr);
 	} else if (s->sym == KEYWORD_DEFINE) {
 		return eval_define(l);
+	} else if (s->sym == KEYWORD_SETBANG) {
+		return eval_setbang(l);
 	} else {
 		std::stringstream err;
 		err << "Unknown symbol: " << s->sym;

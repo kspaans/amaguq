@@ -38,6 +38,7 @@ struct amaguq {
 	atom* eval_symbol(list* a);
 	atom* eval_quote(atom* a);
 	symbol* eval_define(atom* a);
+	symbol* eval_setbang(atom* a);
 
 	// TODO change member variables to start with _
 	heap hp;

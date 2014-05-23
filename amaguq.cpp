@@ -134,7 +134,7 @@ symbol* symbol_helper(const std::string& s, unsigned& idx)
 	const unsigned length = s.length();
 
 	// TODO symbols can be more than alphanumerics
-	while (isalnum(s[idx]) && idx <= length) {
+	while ((isalnum(s[idx]) || '!' == s[idx]) && idx <= length) {
 		idx += 1;
 	}
 
