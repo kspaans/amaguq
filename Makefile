@@ -48,7 +48,7 @@ gtest_main.a : gtest-all.o gtest_main.o
 tests.o : $(USER_DIR)/tests.cpp $(GTEST_HEADERS) amaguq.h
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/tests.cpp
 
-Tests : tests.o ${OBJS} gtest_main.a
+Tests : tests.o ut_list.o ${OBJS} gtest_main.a
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
 ################################################################################
 
