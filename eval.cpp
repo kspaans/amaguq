@@ -31,6 +31,8 @@ symbol* amaguq::eval_define(atom* a)
 	list* l;
 	list* expr;
 	symbol* s;
+	std::pair<table::iterator, bool> inserted_pair;
+
 	if (LIST == a->atype) {
 		l = static_cast<list*>(a);
 	} else {
@@ -52,8 +54,16 @@ symbol* amaguq::eval_define(atom* a)
 	if (expr->cdr != hp.h[2]) { // empty list
 		throw std::logic_error("extra arguments in expression");
 	}
-        // TODO I thought inserting would overwrite, if not this needs to change
-	env.symbol_table.insert(std::make_pair(s->sym, expr->car->eval()));
+
+	inserted_pair = env.symbol_table.insert(
+		std::make_pair(s->sym, expr->car->eval())
+	);
+	if (!inserted_pair.second) {
+		env.symbol_table.erase(env.symbol_table.find(s->sym));
+		env.symbol_table.insert(
+			std::make_pair(s->sym, expr->car->eval())
+		);
+	}
 
 	// TODO memory leak
 	return new symbol("OK");
