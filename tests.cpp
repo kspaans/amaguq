@@ -378,6 +378,7 @@ TEST_F(symbols_test, symbol_not_self_eval)
 	std::string s = "asymbol";
 
 	t = a.read(s);
+	// TODO not use exceptions for program errors
 	EXPECT_THROW(a2 = t->eval(), std::logic_error);
 }
 
@@ -501,10 +502,17 @@ TEST_F(env_test, setbang_success)
 	EXPECT_EQ(1, i->value);
 }
 
-#if 0 // TODO
 TEST_F(env_test, setbang_failure)
 {
 	std::string s =  "(set! a 0)";
+
+	t = a.read(s);
+
+	// TODO not use exceptions for program errors
+	EXPECT_THROW(t = t->eval(), std::logic_error);
+}
+
+#if 0 // TODO
 TEST_F(if_test, 2part_ift)
 {
 	std::string s =  "(if #t 1 2)";
