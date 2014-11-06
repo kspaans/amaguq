@@ -130,7 +130,6 @@ atom* amaguq::eval_if(list* l)
 	 *
 	 *
 	 */
-  std::cout << "Eval'ing first expr in IF" << std::endl;
 	result = l->car->eval();
 	if (BOOLEAN == result->atype) {
     std::cout << "BOOL, BABY!" << std::endl;
