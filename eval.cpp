@@ -7,6 +7,7 @@
 const std::string KEYWORD_QUOTE("quote");
 const std::string KEYWORD_DEFINE("define");
 const std::string KEYWORD_SETBANG("set!");
+const std::string KEYWORD_IF("if");
 
 atom* amaguq::eval_quote(atom* a)
 {
@@ -112,6 +113,54 @@ symbol* amaguq::eval_setbang(atom* a)
 	return new symbol("OK");
 }
 
+atom* amaguq::eval_if(list* l)
+{
+	list* expr;
+	atom* result;
+	symbol* s;
+
+	/* if (LIST == a->atype) { */
+	/* 	l = static_cast<list*>(a); */
+	/* } else { */
+	/* 	throw std::logic_error("define with no list"); */
+	/* } */
+	/*
+	 *(if (cond (true (false ()))))
+	 *
+	 *
+	 *
+	 */
+  std::cout << "Eval'ing first expr in IF" << std::endl;
+	result = l->car->eval();
+	if (BOOLEAN == result->atype) {
+    std::cout << "BOOL, BABY!" << std::endl;
+  } else {
+    std::cout << "womp-womp" << std::endl;
+  }
+
+	/*if (LIST == l->cdr->atype) {
+		expr = static_cast<list*>(l->cdr);
+		if (SYMBOL != expr->car->atype) {
+			throw std::logic_error("define with no symbol");
+		}
+	} else {
+		throw std::logic_error("improper argument to define");
+	}
+	if (LIST != expr->cdr->atype) {
+		throw std::logic_error("improper expression in define");
+	}
+	s = static_cast<symbol*>(expr->car);
+	expr = static_cast<list*>(expr->cdr);
+	if (expr->cdr != hp.h[2]) { // empty list
+		throw std::logic_error("extra arguments in expression");
+	}*/
+
+
+	// TODO memory leak
+	return new symbol("OK");
+	return new symbol("OK");
+}
+
 atom* amaguq::eval_symbol(list* l)
 {
 	symbol* s = static_cast<symbol*>(l->car);
@@ -123,6 +172,8 @@ atom* amaguq::eval_symbol(list* l)
 		return eval_define(l);
 	} else if (s->sym == KEYWORD_SETBANG) {
 		return eval_setbang(l);
+	} else if (s->sym == KEYWORD_IF) {
+		return eval_if(l);
 	} else {
 		std::stringstream err;
 		err << "Unknown symbol: " << s->sym;

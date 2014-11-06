@@ -149,11 +149,13 @@ atom* amaguq::reads(const std::string& s, unsigned& idx)
 
 	gobble_whitespace(s, idx);
 
-
 	if ('#' == s[idx]) {
 		if ('t' == s[idx + 1]) {
+      std::cout << "K3" << std::endl;
+			idx += 2;
 			a = hp.h[0];
 		} else if ('f' == s[idx + 1]) {
+			idx += 2;
 			a = hp.h[1];
 		} else if ('\\' == s[idx + 1]) {
 			a = char_helper(s, idx);
@@ -163,9 +165,11 @@ atom* amaguq::reads(const std::string& s, unsigned& idx)
 		a = str_helper(s, idx);
 		hp.alloc(a);
 	} else if ('(' == s[idx]) {
+    std::cout << "K1" << std::endl;
 		a = read_pair(s, ++idx);
 	} else if ((s[idx] >= 'a' && s[idx] <= 'z')
 			|| (s[idx] >= 'A' && s[idx] <= 'Z')) {
+    std::cout << "K2" << std::endl;
 		a = symbol_helper(s, idx);
 		hp.alloc(a);
 	} else if (('\'' == s[idx])) {
@@ -174,6 +178,7 @@ atom* amaguq::reads(const std::string& s, unsigned& idx)
 		a = new quote(a);
 		hp.alloc(a);
 	} else {
+    std::cout << "Kfixnum" << std::endl;
 		a = fixnum_helper(s, idx);
 		hp.alloc(a);
 	}
