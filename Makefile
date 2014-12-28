@@ -1,4 +1,4 @@
-CXX=clang++
+CXX=afl-0.43b/afl-g++
 CXXFLAGS=-O0 -MMD -std=c++11 -Wall -Wpointer-arith -Wl,-O1 \
 				 -Wl,--build-id=sha1 #-fsanitize=address
 
