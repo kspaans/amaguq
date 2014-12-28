@@ -524,7 +524,6 @@ TEST_F(if_test, 2part_ift)
 	fixnum* i;
 
 	t = a.read(s);
-  ///////////////////////////std::cout << t << std::endl;
 	t = t->eval();
 
 	EXPECT_EQ(FIXNUM, t->atype);
@@ -532,10 +531,19 @@ TEST_F(if_test, 2part_ift)
 	EXPECT_EQ(1, i->value);
 }
 
-#if 0 // TODO
 TEST_F(if_test, 2part_iff)
 {
 	std::string s =  "(if #f 1 2)";
+	fixnum* i;
+
+	t = a.read(s);
+	t = t->eval();
+
+	EXPECT_EQ(FIXNUM, t->atype);
+	i = static_cast<fixnum*>(t);
+	EXPECT_EQ(2, i->value);
+}
+#if 0 // TODO
 TEST_F(if_test, 1part_ift)
 {
 	std::string s =  "(if #t 1)";

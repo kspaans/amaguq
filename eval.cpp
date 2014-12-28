@@ -118,47 +118,27 @@ atom* amaguq::eval_if(list* l)
 	list* expr;
 	atom* result;
 	symbol* s;
+  boolean* b;
 
-	/* if (LIST == a->atype) { */
-	/* 	l = static_cast<list*>(a); */
-	/* } else { */
-	/* 	throw std::logic_error("define with no list"); */
-	/* } */
-	/*
-	 *(if (cond (true (false ()))))
-	 *
-	 *
-	 *
-	 */
-  std::cout << "Eval'ing first expr in IF" << std::endl;
-	result = l->car->eval();
-	if (BOOLEAN == result->atype) {
-    std::cout << "BOOL, BABY!" << std::endl;
-  } else {
-    std::cout << "womp-womp" << std::endl;
+	result = l->cdr;
+  if (LIST == result->atype) {
+    expr = static_cast<list*>(result);
+    result = expr->car->eval();
   }
 
-	/*if (LIST == l->cdr->atype) {
-		expr = static_cast<list*>(l->cdr);
-		if (SYMBOL != expr->car->atype) {
-			throw std::logic_error("define with no symbol");
-		}
-	} else {
-		throw std::logic_error("improper argument to define");
-	}
-	if (LIST != expr->cdr->atype) {
-		throw std::logic_error("improper expression in define");
-	}
-	s = static_cast<symbol*>(expr->car);
-	expr = static_cast<list*>(expr->cdr);
-	if (expr->cdr != hp.h[2]) { // empty list
-		throw std::logic_error("extra arguments in expression");
-	}*/
+	if (BOOLEAN != result->atype) {
+    return nullptr;
+  }
 
-
-	// TODO memory leak
-	return new symbol("OK");
-	return new symbol("OK");
+  b = static_cast<boolean*>(result);
+  if (b->str == "#t") {
+    expr = static_cast<list*>(expr->cdr);
+    return expr->car->eval();
+  } else {
+    expr = static_cast<list*>(expr->cdr);
+    expr = static_cast<list*>(expr->cdr);
+    return expr->car->eval();
+  }
 }
 
 atom* amaguq::eval_symbol(list* l)
