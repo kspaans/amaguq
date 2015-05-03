@@ -46,9 +46,13 @@ int main(void)
 	std::vector<atom*>::iterator it;
 
 	for (it = a.hp.h.begin(); it != a.hp.h.end(); ++it) {
-		std::cout << *it << " " <<
-			(*it)->atype << std::endl;
-		// TODO print more complete info: stringify the type, value, etc
+		if (nullptr != *it) {
+			std::cout << *it << " " <<
+				(*it)->atype << std::endl;
+			// TODO print more complete info: stringify the type, value, etc
+		} else {
+			std::cout << "Oops a NULL in the heap!" << std::endl;
+		}
 	}
 
 	return 0;
