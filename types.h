@@ -19,6 +19,7 @@ struct atom {
 
 	virtual std::string print();
 	virtual atom* eval();
+	virtual void accept(amaguq*) = 0;
 
 	amaguq* interpreter;
 	a_type atype;
@@ -30,6 +31,7 @@ struct fixnum : atom {
 
 	virtual std::string print();
 	virtual atom* eval();
+	virtual void accept(amaguq*);
 
 	int value;
 };
@@ -40,6 +42,7 @@ struct boolean : atom {
 
 	virtual std::string print();
 	virtual atom* eval();
+	virtual void accept(amaguq*);
 
 	std::string str;
 };
@@ -50,6 +53,7 @@ struct charlit : atom {
 
 	virtual std::string print();
 	virtual atom* eval();
+	virtual void accept(amaguq*);
 
 	std::string str;
 };
@@ -60,6 +64,7 @@ struct strlit : atom {
 
 	virtual std::string print();
 	virtual atom* eval();
+	virtual void accept(amaguq*);
 
 	std::string str;
 };
@@ -70,6 +75,7 @@ struct list : atom {
 
 	virtual std::string print();
 	virtual atom* eval();
+	virtual void accept(amaguq*);
 
 	atom* car;
 	atom* cdr;
@@ -81,6 +87,7 @@ struct symbol : atom {
 
 	virtual std::string print();
 	virtual atom* eval();
+	virtual void accept(amaguq*);
 
 	std::string sym;
 };
@@ -92,6 +99,7 @@ struct quote : atom {
 
 	virtual std::string print();
 	virtual atom* eval();
+	virtual void accept(amaguq*);
 
 	atom* q;
 };

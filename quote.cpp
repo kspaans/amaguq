@@ -19,3 +19,8 @@ atom* quote::eval()
 {
 	return q;
 }
+
+void quote::accept(amaguq* visitor)
+{
+	visitor->visit(this);
+}

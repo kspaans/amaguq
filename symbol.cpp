@@ -27,3 +27,8 @@ atom* symbol::eval()
 
 	return it->second;
 }
+
+void symbol::accept(amaguq* visitor)
+{
+	visitor->visit(this);
+}

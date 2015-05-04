@@ -34,6 +34,7 @@ int main(void)
 		}
 		try {
 			at = a.read(line);
+      at->accept(&a);
 			print(at->eval());
 		} catch (std::exception& e) {
 			std::cout << "Error: " << e.what() << std::endl;

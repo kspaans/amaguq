@@ -162,3 +162,40 @@ atom* amaguq::eval_symbol(list* l)
 
 	return s;
 }
+
+atom* amaguq::visit(fixnum* fixnum)
+{
+	return fixnum->eval();
+}
+
+atom* amaguq::visit(boolean* boolean)
+{
+	return boolean->eval();
+}
+
+atom* amaguq::visit(charlit* charlit)
+{
+	return charlit->eval();
+}
+
+atom* amaguq::visit(strlit* strlit)
+{
+	return strlit->eval();
+}
+
+atom* amaguq::visit(list* list)
+{
+	std::cout << "trololololo " << __LINE__ << std::endl;
+	return list->eval();
+}
+
+atom* amaguq::visit(symbol* symbol)
+{
+	return symbol->eval();
+}
+
+atom* amaguq::visit(quote* quote)
+{
+	std::cout << "tralolalolalo " << __LINE__ << std::endl;
+	return quote->eval();
+}

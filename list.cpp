@@ -38,3 +38,8 @@ atom* list::eval()
 		throw std::logic_error("Cannot evaluate list");
 	}
 }
+
+void list::accept(amaguq* visitor)
+{
+	visitor->visit(this);
+}

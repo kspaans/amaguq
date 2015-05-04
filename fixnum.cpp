@@ -23,3 +23,8 @@ atom* fixnum::eval()
 {
 	return this;
 }
+
+void fixnum::accept(amaguq* visitor)
+{
+	visitor->visit(this);
+}

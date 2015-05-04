@@ -18,3 +18,8 @@ atom* strlit::eval()
 {
 	return this;
 }
+
+void strlit::accept(amaguq* visitor)
+{
+	visitor->visit(this);
+}

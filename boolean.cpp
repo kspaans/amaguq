@@ -19,3 +19,8 @@ atom* boolean::eval()
 {
 	return this;
 }
+
+void boolean::accept(amaguq* visitor)
+{
+	visitor->visit(this);
+}

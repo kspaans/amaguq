@@ -1,6 +1,8 @@
 #include <sstream>
 #include "amaguq.h"
 
+// FIXME: this should be an abstract class
+
 atom::~atom()
 {
 	atype = ATOM;
