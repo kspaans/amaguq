@@ -35,7 +35,7 @@ struct amaguq {
 	atom* read(const std::string&);
 	atom* reads(const std::string&, unsigned&);
 	atom* read_pair(const std::string&, unsigned&);
-	atom* eval_symbol(list*);
+	atom* eval_symbol_list(list*);
 	atom* eval_quote(atom*);
 	symbol* eval_define(atom*);
 	symbol* eval_setbang(atom*);

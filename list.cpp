@@ -33,7 +33,7 @@ atom* list::eval()
 		throw std::logic_error("Cannot evaluate empty list");
 	}
 	if (SYMBOL == car->atype) {
-		return interpreter->eval_symbol(this);
+		return interpreter->eval_symbol_list(this);
 	} else {
 		throw std::logic_error("Cannot evaluate list");
 	}

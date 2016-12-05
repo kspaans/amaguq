@@ -141,7 +141,7 @@ atom* amaguq::eval_if(list* l)
   }
 }
 
-atom* amaguq::eval_symbol(list* l)
+atom* amaguq::eval_symbol_list(list* l)
 {
 	symbol* s = static_cast<symbol*>(l->car);
 
