@@ -22,5 +22,5 @@ atom* boolean::eval()
 
 atom* boolean::accept(amaguq* visitor)
 {
-	visitor->visit(this);
+	return visitor->visit(this);
 }

@@ -21,5 +21,5 @@ atom* strlit::eval()
 
 atom* strlit::accept(amaguq* visitor)
 {
-	visitor->visit(this);
+	return visitor->visit(this);
 }

@@ -22,5 +22,5 @@ atom* quote::eval()
 
 atom* quote::accept(amaguq* visitor)
 {
-	visitor->visit(this);
+	return visitor->visit(this);
 }
