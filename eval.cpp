@@ -71,18 +71,12 @@ symbol* amaguq::eval_define(atom* a)
 	return new symbol("OK");
 }
 
-symbol* amaguq::eval_setbang(atom* a)
+symbol* amaguq::eval_setbang(list* l)
 {
-	list* l;
 	list* expr;
 	symbol* s;
 	table::iterator it;
 
-	if (LIST == a->atype) {
-		l = static_cast<list*>(a);
-	} else {
-		throw std::logic_error("set! with no list");
-	}
 	if (LIST == l->cdr->atype) {
 		expr = static_cast<list*>(l->cdr);
 		if (SYMBOL != expr->car->atype) {
@@ -124,7 +118,9 @@ atom* amaguq::eval_if(list* l)
   if (LIST == result->atype) {
     expr = static_cast<list*>(result);
     result = expr->car->eval();
-  }
+  } else {
+		throw std::logic_error("Malformed IF statement");
+	}
 
 	if (BOOLEAN != result->atype) {
     return nullptr;
@@ -141,10 +137,8 @@ atom* amaguq::eval_if(list* l)
   }
 }
 
-atom* amaguq::eval_symbol_list(list* l)
+atom* amaguq::eval_symbol_list(list* l, symbol *s)
 {
-	symbol* s = static_cast<symbol*>(l->car);
-
 	if (s->sym == KEYWORD_QUOTE) {
 		// TODO destroy the parent list?
 		return eval_quote(l->cdr);
@@ -185,7 +179,6 @@ atom* amaguq::visit(strlit* strlit)
 
 atom* amaguq::visit(list* list)
 {
-	std::cout << "trololololo " << __LINE__ << std::endl;
 	return list->eval();
 }
 
@@ -198,4 +191,20 @@ atom* amaguq::visit(quote* quote)
 {
 	std::cout << "tralolalolalo " << __LINE__ << std::endl;
 	return quote->eval();
+}
+
+// // // //  // // // //
+
+list_visitor::list_visitor(list* l)
+{
+	body = l;
+}
+
+list_visitor::~list_visitor()
+{
+}
+
+atom* list_visitor::visit(symbol* s)
+{
+	return amaguq::eval_symbol_list(body, s);
 }

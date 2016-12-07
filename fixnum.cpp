@@ -24,7 +24,7 @@ atom* fixnum::eval()
 	return this;
 }
 
-void fixnum::accept(amaguq* visitor)
+atom* fixnum::accept(amaguq* visitor)
 {
-	visitor->visit(this);
+	return visitor->visit(this);
 }

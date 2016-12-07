@@ -35,22 +35,31 @@ struct amaguq {
 	atom* read(const std::string&);
 	atom* reads(const std::string&, unsigned&);
 	atom* read_pair(const std::string&, unsigned&);
-	atom* eval_symbol_list(list*);
+	atom* eval_symbol_list(list*, symbol*);
 	atom* eval_quote(atom*);
 	symbol* eval_define(atom*);
-	symbol* eval_setbang(atom*);
+	symbol* eval_setbang(list*);
 	atom* eval_if(list*);
 	atom* visit(fixnum*);
 	atom* visit(boolean*);
 	atom* visit(charlit*);
 	atom* visit(strlit*);
 	atom* visit(list*);
-	atom* visit(symbol*);
+	virtual atom* visit(symbol*);
 	atom* visit(quote*);
 
 	// TODO change member variables to start with _
 	heap hp;
 	environment env;
+};
+
+struct list_visitor : amaguq {
+	list_visitor(list*);
+	~list_visitor();
+
+	virtual atom* visit(symbol*);
+
+	list* body;
 };
 
 #endif

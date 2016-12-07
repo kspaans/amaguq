@@ -20,7 +20,7 @@ atom* charlit::eval()
 	return this;
 }
 
-void charlit::accept(amaguq* visitor)
+atom* charlit::accept(amaguq* visitor)
 {
 	visitor->visit(this);
 }

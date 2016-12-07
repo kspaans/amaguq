@@ -172,6 +172,8 @@ atom* amaguq::reads(const std::string& s, unsigned& idx)
 	} else if (('\'' == s[idx])) {
 		a = reads(s, ++idx);
 		// TODO should the intermediate stuff be added to the heap?
+		// TODO this adds another cons cell allocation around the quoted
+		//      symbol. Causing ('if ...) to not work. Should it?
 		a = new quote(a);
 		hp.alloc(a);
 	} else {

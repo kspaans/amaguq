@@ -20,7 +20,7 @@ atom* boolean::eval()
 	return this;
 }
 
-void boolean::accept(amaguq* visitor)
+atom* boolean::accept(amaguq* visitor)
 {
 	visitor->visit(this);
 }
