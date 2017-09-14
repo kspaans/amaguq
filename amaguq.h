@@ -40,11 +40,12 @@ struct amaguq {
 	symbol* eval_define(atom*);
 	symbol* eval_setbang(list*);
 	atom* eval_if(list*);
+	atom* eval_if_body(list*, boolean *);
 	atom* visit(fixnum*);
-	atom* visit(boolean*);
+	virtual atom* visit(boolean*);
 	atom* visit(charlit*);
 	atom* visit(strlit*);
-	atom* visit(list*);
+	virtual atom* visit(list*);
 	virtual atom* visit(symbol*);
 	atom* visit(quote*);
 
@@ -58,6 +59,33 @@ struct list_visitor : amaguq {
 	~list_visitor();
 
 	virtual atom* visit(symbol*);
+
+	list* body;
+};
+
+struct if_visitor : amaguq {
+	if_visitor(list*);
+	~if_visitor();
+
+	virtual atom* visit(list*);
+
+	list* body;
+};
+
+struct if_true_visitor : amaguq {
+	if_true_visitor(list*);
+	~if_true_visitor();
+
+	virtual atom* visit(list*);
+
+	list* body;
+};
+
+struct if_false_visitor : amaguq {
+	if_false_visitor(list*);
+	~if_false_visitor();
+
+	virtual atom* visit(list*);
 
 	list* body;
 };

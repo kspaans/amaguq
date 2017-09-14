@@ -109,31 +109,21 @@ symbol* amaguq::eval_setbang(list* l)
 
 atom* amaguq::eval_if(list* l)
 {
-	list* expr;
-	atom* result;
-	symbol* s;
-  boolean* b;
-
-	result = l->cdr;
-  if (LIST == result->atype) {
-    expr = static_cast<list*>(result);
-    result = expr->car->eval();
-  } else {
+	if (LIST == l->cdr->atype) {
+		return l->cdr->accept(new if_visitor(static_cast<list*>(l->cdr)));
+	} else {
 		throw std::logic_error("Malformed IF statement");
 	}
+}
 
-	if (BOOLEAN != result->atype) {
-    return nullptr;
-  }
-
-  b = static_cast<boolean*>(result);
-  if (b->str == "#t") {
-    expr = static_cast<list*>(expr->cdr);
-    return expr->car->eval();
+atom* amaguq::eval_if_body(list* l, boolean* b) {
+  // FIXME why isn't this boolean a singleton? Is it a copy-constructor?
+  if (b->str == "#t") { //(b == hp.h[0]) {
+    return l->cdr->accept(new if_true_visitor(static_cast<list*>(l->cdr)));
+  } else if (l->cdr == hp.h[2]) { // empty list
+    return hp.h[1];
   } else {
-    expr = static_cast<list*>(expr->cdr);
-    expr = static_cast<list*>(expr->cdr);
-    return expr->car->eval();
+    return l->cdr->accept(new if_false_visitor(static_cast<list*>(l->cdr)));
   }
 }
 
@@ -189,7 +179,6 @@ atom* amaguq::visit(symbol* symbol)
 
 atom* amaguq::visit(quote* quote)
 {
-	std::cout << "tralolalolalo " << __LINE__ << std::endl;
 	return quote->eval();
 }
 
@@ -207,4 +196,54 @@ list_visitor::~list_visitor()
 atom* list_visitor::visit(symbol* s)
 {
 	return amaguq::eval_symbol_list(body, s);
+}
+
+// // // //  // // // //
+
+if_visitor::if_visitor(list* l)
+{
+	body = l;
+}
+
+if_visitor::~if_visitor()
+{
+}
+
+atom* if_visitor::visit(list* l)
+{
+	return amaguq::eval_if_body(body, dynamic_cast<boolean*>(l->car));
+}
+
+// // // //  // // // //
+
+if_true_visitor::if_true_visitor(list* l)
+{
+	body = l;
+}
+
+if_true_visitor::~if_true_visitor()
+{
+}
+
+atom* if_true_visitor::visit(list* l)
+{
+  return l->car->eval();
+}
+
+// // // //  // // // //
+
+if_false_visitor::if_false_visitor(list* l)
+{
+	body = l;
+}
+
+if_false_visitor::~if_false_visitor()
+{
+}
+
+atom* if_false_visitor::visit(list* l)
+{
+  // The result is whatever l->cdr->car evaluates to, so we can reuse the
+  // if_true_visitor functionality.
+  return l->cdr->accept(new if_true_visitor(static_cast<list*>(l->cdr)));
 }
